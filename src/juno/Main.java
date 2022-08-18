@@ -13,8 +13,12 @@ public class Main {
         giocatori.add(marcello);
         Table tavolo = new Table(giocatori);
 
+        // 1) sort players based on their random value with stream -- if equal do again?
+        // 2) distr of cards by the dealer, which is the Player with the highest value in the sorted LIST (7 each)
+        // the deck is now ready to be used
+        // 3) groundCard is the firstDeck card
+        // 4) Game starts 
 
-        // 1) Start thinking about interactions between stuff
 
 
     }

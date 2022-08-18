@@ -1,6 +1,7 @@
 package juno;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DrawDeck {
 
@@ -61,6 +62,13 @@ public class DrawDeck {
         return deck.remove(0);
     }
 
+    public Card getRandomCard(){
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(this.deck.size()); // take a random number in range [0, deckSize)
+        return this.deck.get(randomIndex);
+    }
+
+    // To remove as soon as the view is done
     public String toString(){
         String cards = "";
         for(Card card: deck){

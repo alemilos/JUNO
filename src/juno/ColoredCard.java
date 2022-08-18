@@ -2,7 +2,7 @@ package juno;
 
 public abstract class ColoredCard extends Card{
 
-    private CardColors color;
+    protected CardColors color;
 
     public ColoredCard(CardColors color, CardTypes type){
         super(type);

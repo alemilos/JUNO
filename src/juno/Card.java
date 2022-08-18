@@ -2,11 +2,13 @@ package juno;
 
 public abstract class Card {
 
-    private CardTypes cardType;
+    protected CardTypes type;
 
     public Card(CardTypes type) {
-        cardType = type;
+        this.type = type;
     }
+
+    public abstract CardTypes getType();
 
     public abstract String toString();
 

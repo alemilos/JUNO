@@ -1,9 +1,11 @@
 package juno;
 
+import java.util.ArrayList;
+
 public class Player {
 
     private String name;
-    private Card[] hand;
+    private ArrayList<Card> hand;
     private boolean hasUno; // true if hand.length == 1, false otherwise
     private boolean isBot; // true if the player is a BOT
     private int preparationsRandomCardValue;
@@ -15,8 +17,13 @@ public class Player {
     public String getName(){
         return name;
     }
-    public Card[] getHand(){
+
+    public ArrayList<Card> getHand(){
         return hand;
+    }
+
+    public void setHand(ArrayList<Card> hand){
+        this.hand = hand;
     }
 
     public boolean getIsBOT() {

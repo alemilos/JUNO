@@ -59,6 +59,8 @@ public class Preparations {
 
     }
 
-        // set the ground card as the first card from the deck
+    public Table getTable(){
+        return table;
+    }
 
 }

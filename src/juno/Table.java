@@ -68,6 +68,7 @@ public class Table {
         return reverseFlow;
     }
 
+
     public void nextPlayer(){
         /* This function considers the cases in which the flow of game is reversed and also when the blocked card is active
         * Since the Skip card only works for a single player hand, it gets turned off (false) at the end of this method

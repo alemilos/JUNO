@@ -26,11 +26,11 @@ public class Player {
         this.hand = hand;
     }
 
-    public boolean getIsBOT() {
+    public boolean isBot() {
         return isBot;
     }
 
-    public boolean getHasUNO() {
+    public boolean isHasUno() {
         return hasUno;
     }
 

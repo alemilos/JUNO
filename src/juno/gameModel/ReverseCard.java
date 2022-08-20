@@ -1,10 +1,8 @@
-package juno;
+package juno.gameModel;
 
-public class DrawTwoCard extends ColoredCard{
+public class ReverseCard extends ColoredCard{
 
-    private final int CARDS_TO_DRAW = 2;
-
-    public DrawTwoCard(CardColors color, CardTypes type){
+    public ReverseCard(CardColors color, CardTypes type){
         super(color, type);
     }
 

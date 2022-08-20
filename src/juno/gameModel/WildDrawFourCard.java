@@ -1,4 +1,4 @@
-package juno;
+package juno.gameModel;
 
 public class WildDrawFourCard extends SpecialCard{
 

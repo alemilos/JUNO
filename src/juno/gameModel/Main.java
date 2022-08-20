@@ -1,4 +1,4 @@
-package juno;
+package juno.gameModel;
 
 import java.util.ArrayList;
 

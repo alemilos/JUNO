@@ -1,4 +1,4 @@
-package juno;
+package juno.gameModel;
 
 public abstract class Card {
 

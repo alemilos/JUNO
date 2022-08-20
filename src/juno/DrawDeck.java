@@ -58,6 +58,7 @@ public class DrawDeck {
         return this.deck.size();
     }
 
+    // This method should be called drawCard()
     public Card getFirstCard(){
         return deck.remove(0);
     }
@@ -66,6 +67,18 @@ public class DrawDeck {
         Random rand = new Random();
         int randomIndex = rand.nextInt(this.deck.size()); // take a random number in range [0, deckSize)
         return this.deck.get(randomIndex);
+    }
+
+    public void putCardInTheMiddle(Card card){
+        // This puts the card in the deck randomly (in case of error e.g. preparation phase gets a WILDDRAWFOURCARD in ground)
+        Random rand = new Random();
+        // get a random index [1, deck.size)
+        int randomCardIndex = rand.nextInt(this.deck.size()-1) +1;
+        this.deck.add(randomCardIndex, card);
+    }
+
+    public ArrayList<Card> getDeck(){
+        return deck;
     }
 
     // To remove as soon as the view is done

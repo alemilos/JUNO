@@ -3,9 +3,8 @@ DELETE THIS AFTER PROGRAM IS DONE
 TO DOS...
 
 MENU:
-- Create a writeJSON function that adds a user object to profili.json's list file.
-- Use SpringForm to build the central panel of the SetData class
-
+- Find a way to open frames with the same W and H of the parent frame (IFF the parent get disposed)
+- Strip the username in textfield so that "alessandro".equals("    alessandro  ")
 
 GAME:
 - develop the View and implement the controller

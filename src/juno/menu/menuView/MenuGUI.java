@@ -58,8 +58,7 @@ public class MenuGUI {
         });
 
         // Button GIOCA
-        JButton playButton = new JButton();
-        playButton.setText("Gioca");
+        JButton playButton = new JButton("Gioca");
         playButton.setForeground(Color.WHITE);
         playButton.setOpaque(true);
         playButton.setBorderPainted(false);
@@ -100,7 +99,7 @@ public class MenuGUI {
         centralPanel.add(Box.createVerticalStrut(20));
         centralPanel.add(exitButton);
 
-        bottomPanel.setPreferredSize(new Dimension(100,100));
+        bottomPanel.setPreferredSize(new Dimension(100,60));
         bottomPanel.add(settingsBtn, BorderLayout.WEST);
         bottomPanel.add(profileBtn, BorderLayout.EAST);
 

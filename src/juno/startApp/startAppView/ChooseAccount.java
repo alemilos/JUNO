@@ -70,6 +70,7 @@ public class ChooseAccount {
         // create bottom panel
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.setPreferredSize(new Dimension(100, 60));
 
         bottomPanel.add(goBackBtn, BorderLayout.WEST);
         bottomPanel.add(confirmBtn,BorderLayout.EAST);

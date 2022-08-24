@@ -18,7 +18,22 @@ public class Level {
     private int xpToNextLevel;
     private int level;
 
+    public Level(){
+        xp = 0;
+        xpToNextLevel = 100;
+        level = 0;
+    }
 
 
+    public int getXp() {
+        return xp;
+    }
 
+    public int getXpToNextLevel() {
+        return xpToNextLevel;
+    }
+
+    public int getLevel() {
+        return level;
+    }
 }

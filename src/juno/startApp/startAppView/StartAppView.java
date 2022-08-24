@@ -93,7 +93,7 @@ public class StartAppView {
         // exit Button
         ImageIcon exitIcon = new ImageIcon("src/menuIcons/exitIcon.png");
         Image exitImage = exitIcon.getImage();
-        Image newExitImage = exitImage.getScaledInstance(100,100, Image.SCALE_SMOOTH);
+        Image newExitImage = exitImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         exitIcon = new ImageIcon(newExitImage);
         JButton exitBtn = new JButton(exitIcon);
         //ExitButton Listener
@@ -119,6 +119,7 @@ public class StartAppView {
         // SubPanelBottom
         JPanel bottomSubPanel = new JPanel();
         bottomSubPanel.setLayout(new BorderLayout());
+        bottomSubPanel.setPreferredSize(new Dimension(100,60));
         bottomSubPanel.add(exitBtn, BorderLayout.EAST);
 
         mainPanel.add(topSubPanel, BorderLayout.NORTH);
@@ -135,7 +136,7 @@ public class StartAppView {
         //readFile("src/profili.json");
     }
 
-    private static User[] readFile(String fileAddress){
+    public static User[] readFile(String fileAddress){
         Gson gson = new Gson();
 
         try{

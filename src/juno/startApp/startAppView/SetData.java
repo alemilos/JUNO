@@ -1,32 +1,35 @@
 package juno.startApp.startAppView;
 
+import com.google.gson.JsonElement;
 import juno.menu.menuModel.User;
 import juno.menu.menuView.MenuGUI;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.nio.file.FileSystem;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 public class SetData {
+
+    private static ImageIcon avatarChoosedIcon;
+    private static JFrame frame;
+
+    private static JPanel rightPanel;
+
+    private static JLabel avatarImageLabel;
+
+    private static String avatarPathStatic;
     public SetData(){
-        JFrame frame = new JFrame();
+        this.frame = new JFrame();
         frame.setSize(600,500);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-
-
-        // frame BORDER PANEL
-            // top panel
-            // sides panel left and right to make space
-            // central panel
-                // username BORDER PANEL
-                    // title panel
-                    // textfield, submit FLOWPANEL
-            //bottom panel
 
 
         // Title Label
@@ -39,42 +42,49 @@ public class SetData {
         topPanel.setPreferredSize(new Dimension(100, 200));
         topPanel.add(title);
 
-        /***********USERNAME PANEL****************/
-        JPanel usernamePanel = new JPanel();
-        usernamePanel.setLayout(new FlowLayout());
-
-        JLabel usernameText = new JLabel("Username:");
-
-        JTextField usernameTextField = new JTextField();
-        usernameTextField.setPreferredSize(new Dimension(250, 40));
-
         JPanel centralPanel = new JPanel();
         centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.Y_AXIS));
 
-        usernamePanel.add(usernameText);
-        usernamePanel.add(usernameTextField);
 
-        /***********AGE PANEL****************/
-        JPanel agePanel = new JPanel();
-        agePanel.setLayout(new FlowLayout());
+        /******** REIMPLEMENT USERNAME AND AGE WITH SPRING LAYOUT *****/
+        JPanel inputPanel = new JPanel(new SpringLayout());
 
-        JLabel ageText = new JLabel("Età:");
+        JLabel usernameLabel = new JLabel("Username: ", JLabel.TRAILING);
+        inputPanel.add(usernameLabel);
+        TextField usernameTextField = new TextField(10);
+        usernameTextField.setMaximumSize(new Dimension(250, 40));
+        usernameLabel.setLabelFor(usernameTextField);
+        inputPanel.add(usernameTextField);
 
-        JTextField ageTextField = new JTextField();
-        ageTextField.setPreferredSize(new Dimension(50, 40));
+        JLabel ageLabel = new JLabel("Età: ", JLabel.TRAILING);
+        inputPanel.add(ageLabel);
+        TextField ageTextField = new TextField(10);
+        ageTextField.setMaximumSize(new Dimension(250, 40));
+        ageLabel.setLabelFor(ageTextField);
+        inputPanel.add(ageTextField);
 
-        agePanel.add(ageText);
-        agePanel.add(ageTextField);
+        JLabel avatarLabel = new JLabel("Avatar: ", JLabel.TRAILING);
+        inputPanel.add(avatarLabel);
+        JButton chooseFile = new JButton("Scegli Avatar");
+        chooseFile.setMaximumSize(new Dimension(250, 40));
+        avatarLabel.setLabelFor(chooseFile);
+        inputPanel.add(chooseFile);
 
-        /***********AVATAR PANEL****************/
+        chooseFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ShowAvatars sa = new ShowAvatars();
+            }
+        });
 
-        // IMPLEMENT THIS
-
-
+        SpringUtilities.makeCompactGrid(inputPanel,
+                3, 2, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
 
         /********ADDING TO CENTRAL PANEL*********/
-        centralPanel.add(usernamePanel);
-        centralPanel.add(agePanel);
+        centralPanel.add(inputPanel);
+
 
 
         // BOTTOM PANEL
@@ -106,17 +116,41 @@ public class SetData {
         confirmBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /**TODO
-                 ** Put data in JSON FILE
-                 *
-                 ** TODO
-                 * Allow this iFF both textfields are not EMPTY
-                 **/
 
-                // the argument passed to new MENUGUI is for testing purpose
-                MenuGUI menuGUI = new MenuGUI(new User());
-                frame.setVisible(false);
-                frame.dispose();
+                boolean isUsername = usernameTextField.getText().length() > 0;
+                boolean isAge = ageTextField.getText().length() > 0;
+                boolean isAvatar = avatarImageLabel != null;
+
+                User user = new User(usernameTextField.getText(),
+                        Integer.parseInt(ageTextField.getText()),
+                        avatarPathStatic
+                );
+
+                boolean newUser = isNewUser(user);
+
+
+                if(isUsername && isAge && isAvatar && newUser) {
+                    // Write to json
+                    User[] oldUsers = StartAppView.readFile("src/profili.json");
+                    // add user to json user's list
+                    User[] newUsers = new User[oldUsers.length +1];
+                    for(int i = 0; i < oldUsers.length; i++){
+                        newUsers[i] = oldUsers[i];
+                    }
+                    newUsers[oldUsers.length] = user;
+                    try(Writer writer = new FileWriter("src/profili.json")){
+                        Gson gsonBuilder = new GsonBuilder().create();
+                        gsonBuilder.toJson(newUsers, writer);
+                    }catch(IOException ex){
+                        ex.printStackTrace();
+                    }
+
+                    MenuGUI menuGUI = new MenuGUI(user);
+                    frame.setVisible(false);
+                    frame.dispose();
+                }else{
+                    System.out.println("already exist");
+                }
 
             }
         });
@@ -130,7 +164,7 @@ public class SetData {
         // Sides void panels
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(100,100));
-        JPanel rightPanel = new JPanel();
+        rightPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(100,100));
 
 
@@ -142,21 +176,6 @@ public class SetData {
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
 
-
-
-
-        // submit Button
-        /*
-        this.submitUserNameBtn = new JButton("Conferma");
-        submitUserNameBtn.addActionListener(this::actionPerformed);
-
-        // Name text input
-        this.userNameInput = new JTextField("Name");
-        userNameInput.setPreferredSize(new Dimension(250,40));
-
-        frame.add(userNameInput);
-        frame.add(submitUserNameBtn);
-    */
         frame.setVisible(true);
     }
 
@@ -173,6 +192,28 @@ public class SetData {
         SetData sd = new SetData();
     }
 
+    public static void addAvatarImage(ImageIcon icon, String avatarPath){
+        if (avatarChoosedIcon != null){
+            rightPanel.remove(avatarImageLabel);
+            frame.resize(601,601);
+            frame.resize(600,600);
+        }
+        avatarChoosedIcon = icon;
+        avatarImageLabel = new JLabel();
+        avatarImageLabel.setIcon(avatarChoosedIcon);
+        rightPanel.add(avatarImageLabel);
+        avatarPathStatic = avatarPath;
+        frame.resize(600,600);
+    }
 
+    public boolean isNewUser(User user){
+        User[] oldUsers = StartAppView.readFile("src/profili.json");
+        for (User oldUser : oldUsers){
+            if(oldUser.getUsername().equals(user.getUsername())){
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

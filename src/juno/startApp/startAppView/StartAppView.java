@@ -61,7 +61,7 @@ public class StartAppView {
 
         // ContinueGame Button
         JButton continueBtn = new JButton();
-        continueBtn.setText("Continua");
+        continueBtn.setText("   Continua   ");
         continueBtn.setForeground(Color.WHITE);
         continueBtn.setOpaque(true);
         continueBtn.setBorderPainted(false);

@@ -13,11 +13,6 @@ public class Game {
     public Game(Preparations preparation){
         this.table = preparation.getTable();
         this.roundNumber = 0;
-
-        while(!isOver){
-            playRound(table.getPlayingPlayer());
-
-        }
     }
 
     public void setRoundNumber(){

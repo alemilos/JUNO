@@ -2,7 +2,9 @@ package juno.menu.menuView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import juno.game.gameModel.Difficulty;
 import juno.menu.menuModel.User;
+import juno.startApp.startAppView.ConfirmFrame;
 import juno.startApp.startAppView.SpringUtilities;
 import juno.startApp.startAppView.StartAppView;
 
@@ -14,8 +16,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-public class ProfileGUI {
+public class ProfileGUI extends JFrame{
 
+    public ConfirmFrame confirmOrUndoChildFrame;
     public ProfileGUI(User user){
         JFrame frame = new JFrame("Profilo");
         frame.setLayout(new BorderLayout());
@@ -98,7 +101,6 @@ public class ProfileGUI {
         goBackBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                goBackBtn.setFocusPainted(true);
                 MenuGUI menuGUI = new MenuGUI(user);
                 frame.setVisible(false);
                 frame.dispose();
@@ -120,10 +122,9 @@ public class ProfileGUI {
         deleteProfile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                deleteProfile.setFocusPainted(true);
-                removeUserFromJSON(user);
-                StartAppView saw = new StartAppView();
-                frame.dispose();
+                if (confirmOrUndoChildFrame == null) {
+                    confirmOrUndoChildFrame = new ConfirmFrame(frame, "ProfileGUI", user, 666, Difficulty.EASY);
+                }
             }
         });
 
@@ -190,7 +191,7 @@ public class ProfileGUI {
         frame.setVisible(true);
     }
 
-    public void removeUserFromJSON(User user) {
+    public static void removeUserFromJSON(User user) {
         /*
         * Creates a new array that removes the user if the json string of user equals
         * one of the old users in the json file.

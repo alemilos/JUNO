@@ -7,11 +7,15 @@ public class Player {
     private String name;
     private ArrayList<Card> hand;
     private boolean hasUno; // true if hand.length == 1, false otherwise
-    private boolean isBot; // true if the player is a BOT
+    private boolean isBot = true; // true if the player is a BOT
     private int preparationsRandomCardValue;
 
     public Player(String name){
         this.name = name;
+    }
+    public Player(String name, boolean isBot){
+        this.name = name;
+        this.isBot = isBot;
     }
 
     public String getName(){

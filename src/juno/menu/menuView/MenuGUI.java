@@ -1,5 +1,6 @@
 package juno.menu.menuView;
 
+import juno.game.gameView.GameSettingsGUI;
 import juno.menu.menuModel.User;
 
 import javax.swing.*;
@@ -67,10 +68,17 @@ public class MenuGUI {
         playButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         playButton.setSize(new Dimension(100,50));
 
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameSettingsGUI gsg = new GameSettingsGUI(user);
+                frame.dispose();
+            }
+        });
 
         // Button ESCI
         JButton exitButton = new JButton();
-        exitButton.setText("Esci");
+        exitButton.setText(" Esci ");
         exitButton.setForeground(Color.WHITE);
         exitButton.setOpaque(true);
         exitButton.setBorderPainted(false);

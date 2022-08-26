@@ -15,7 +15,6 @@ public class Main {
         giocatori.add(marcello);
         giocatori.add(federico);
         giocatori.add(denis);
-        Game gioco = new Game(new Preparations(new Table(giocatori)));
 
         System.out.println();
 

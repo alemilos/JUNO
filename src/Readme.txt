@@ -11,9 +11,19 @@ MENU:
 the table style, while the other will represent the card back set by the user. This will be dynamic similarly to the
 thing I did with the avatar image.
 
+
 GAME:
-- develop the View and implement the controller
 - JLayeredPane to display cards over cards
 - NOT playing players will have avatar Image NOT enabled, While when they are playing their avatar will be ENABLED
 so will show a color. Maybe we will have some effect on this, like slowly increasing his Height and Width
+- Json file for AI: [{name: Harry Potter, avatar: harrypotter.jpg}] ad ogni nome si associa una faccia
+- Come far funzionare il main game. Importanti funzioni : nextPlayer(), la carta REVERSE se esce come prima carta
+inverte il giro e fa iniziare il mazziere per primo. (da ragionare nel model). Dopo aver fatto nextPlayer, chiamare
+la funzione playroundAI e mettere qualche timing per dare l'illusione che stia veramente giocando
+(magari con una progress bar inversa). Ad ogni round cambia la ground card e una carta dal deck viene pescata.
+Con l'attuale struttura a funzioni del GameGui non è possibile accedere a pannelli specifici. Bisogna inserire il tutto
+dentro classi specifiche così da avere campi privati con i JPanel in modo tale da potervi accedere distruttivamente,
+senza dover renderizzare ogni volta il tutto sprecando risorse di sistema(anche se un bel sticazzi mi viene da dirlo
+data la misura del progetto e data la potenza di calcolo della mia cpu diocane)
+
 

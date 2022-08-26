@@ -25,6 +25,7 @@ public class Preparations {
         this.table.setPlayers(players);
         // Setting the dealer (first one of the players list)
         this.table.setDealer(players.get(0));
+        this.table.getDealer().setDealer(true);
         // Setting the first playing Player to the player next to the dealer
         this.table.setPlayingPlayer(players.get(1));
 

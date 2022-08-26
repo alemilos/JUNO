@@ -15,5 +15,15 @@ public class SkipCard extends ColoredCard{
         return "Color: " + this.color.toString() + " Type: " + this.type.toString();
     }
 
+    @Override
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    @Override
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
 
 }

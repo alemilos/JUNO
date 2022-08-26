@@ -123,7 +123,7 @@ public class ProfileGUI extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (confirmOrUndoChildFrame == null) {
-                    confirmOrUndoChildFrame = new ConfirmFrame(frame, "ProfileGUI", user, 666, Difficulty.EASY);
+                    confirmOrUndoChildFrame = new ConfirmFrame(frame, "ProfileGUI", user, 666, Difficulty.EASY, "");
                 }
             }
         });

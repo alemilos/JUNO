@@ -9,11 +9,12 @@ public class Table {
     private Card groundCard;
     private Player dealer;
     private Player playingPlayer;
+    private Player userPlayer;
     private boolean reverseFlow; // if true, next will traverse the list in the opposite direction
     private boolean isBlocked; // if true, next will jump a player.
 
-    public Table(ArrayList<Player> players){
-        this.drawDeck = new DrawDeck();
+    public Table(ArrayList<Player> players, DrawDeck drawDeck){
+        this.drawDeck = drawDeck;
         this.players = players;
     }
 
@@ -96,5 +97,13 @@ public class Table {
         }
 
         this.isBlocked = false;
+    }
+
+    public void setUserPlayer(Player userPlayer){
+        this.userPlayer = userPlayer;
+    }
+
+    public Player getUserPlayer(){
+        return userPlayer;
     }
 }

@@ -24,6 +24,8 @@ public class GameSettingsGUI extends JFrame{
 
     private Difficulty difficulty;
 
+    private String backCardPath;
+
     public GameSettingsGUI(User user){
 
         /**
@@ -257,7 +259,8 @@ public class GameSettingsGUI extends JFrame{
                                         "GameSettingsGUI",
                                                         user,
                                                         playersNumber,
-                                                        difficulty);
+                                                        difficulty,
+                                                        backCardPath);
                 }
             }
         });

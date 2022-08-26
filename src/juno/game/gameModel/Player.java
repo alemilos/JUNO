@@ -8,6 +8,8 @@ public class Player {
     private ArrayList<Card> hand;
     private boolean hasUno; // true if hand.length == 1, false otherwise
     private boolean isBot = true; // true if the player is a BOT
+
+    private boolean isDealer;
     private int preparationsRandomCardValue;
 
     public Player(String name){
@@ -50,5 +52,17 @@ public class Player {
             ClassicCard downCastClassicCard = (ClassicCard)preparationsRandomCard;
             this.preparationsRandomCardValue = downCastClassicCard.getNumber();
         }
+    }
+
+    public String toString(){
+        return name;
+    }
+
+    public boolean isDealer() {
+        return isDealer;
+    }
+
+    public void setDealer(boolean dealer) {
+        isDealer = dealer;
     }
 }

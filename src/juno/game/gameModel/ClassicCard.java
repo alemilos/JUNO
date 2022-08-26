@@ -22,4 +22,14 @@ public class ClassicCard extends ColoredCard{
         return "Color: " + this.color.toString() +  " Number: " + this.number +  " Type: " + this.type.toString();
     }
 
+    @Override
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    @Override
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
 }

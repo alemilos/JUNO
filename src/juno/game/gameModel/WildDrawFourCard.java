@@ -17,4 +17,14 @@ public class WildDrawFourCard extends SpecialCard{
     public String toString(){
         return "Type: " + this.type.toString();
     }
+
+    @Override
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    @Override
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }

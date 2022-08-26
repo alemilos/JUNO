@@ -15,7 +15,7 @@ public class ConfirmFrame extends JFrame{
 
     String result = null;
 
-    public ConfirmFrame(JFrame parentFrame, String parentFrameName, User user, int playersNumber, Difficulty difficulty){
+    public ConfirmFrame(JFrame parentFrame, String parentFrameName, User user, int playersNumber, Difficulty difficulty, String backCardPath){
         // here go 2 buttons : UNDO and CONFIRM
         // if confirm --> delete the user
         JFrame frame = new JFrame();
@@ -61,7 +61,7 @@ public class ConfirmFrame extends JFrame{
                     StartAppView saw = new StartAppView();
                     parentFrame.dispose();
                 } else if(parentFrameName.equals("GameSettingsGUI")){
-                    GameGUI gg = new GameGUI(user, playersNumber, difficulty );
+                    GameGUI gg = new GameGUI(user, playersNumber, difficulty, backCardPath );
                     parentFrame.dispose();
                 }
             }

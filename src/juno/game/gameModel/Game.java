@@ -15,6 +15,10 @@ public class Game {
         this.roundNumber = 0;
     }
 
+    public Table getTable(){
+        return table;
+    }
+
     public void setRoundNumber(){
         this.roundNumber+=1;
     }

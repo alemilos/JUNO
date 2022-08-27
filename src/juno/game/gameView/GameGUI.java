@@ -8,8 +8,8 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,19 +18,25 @@ public class GameGUI {
     /*
     * IF THE CONTAINER WILL CONTAIN OTHER CONTAINERS --> USE setSize
     * ELSE USE setPreferredSize.
+    *
+    * To listen or resize use COMPONENT LISTENER (NEW COMPONENT ADAPTER){}
     * */
 
     private Game game;
 
     private JFrame gameFrame;
 
-    private int frameWidth = 1200;
+    private OneEnemyGUI enemyGUI;
 
-    private int frameHeight = 800;
+    private LeftEnemyPanel  leftEnemyPanel = new LeftEnemyPanel();
 
-    public GameGUI(User user, int playersNumber, Difficulty difficulty, String backPath){
+    public GameGUI(User user, int playersNumber, Difficulty difficulty, String cardBackPath){
 
-        ArrayList<Player> players = createPlayers(user, playersNumber);
+
+        LinkedHashMap<Player, String> playerToAvatarPath = createPlayerToAvatarMap(user, playersNumber);
+        ArrayList<Player> players = new ArrayList<>(playerToAvatarPath.keySet());
+        ArrayList<String> avatarsPath = new ArrayList<>(playerToAvatarPath.values());
+
         Player userPlayer = players.get(0);
 
         DrawDeck drawDeck = new DrawDeck(); // the setter is called at construction phase
@@ -39,6 +45,57 @@ public class GameGUI {
 
         game = new Game(new Preparations(new Table(players, drawDeck)));
         game.getTable().setUserPlayer(userPlayer);
+
+        /**
+         * After preparation PHASE the players list order will be changed
+         * I need to find the position of the USER in the array [enemy1, enemy2, enemy3, USER, enemy4, enemy5]
+         * the game goes in clockwise order. Enemy3 goes at the left of USER while enemy 4 goes at his right.
+         *
+         * **/
+
+        /**
+         * Make a function that iterate over the game.gettable.getplayers array
+         * finds the userPlayer, and build an array in this way
+         * gettable.getplayers = [enemy1, enemy2 , user, enemy3, enemy4] --> returns [user,enemy3,enemy4,enemy1, enemy2]
+         * so the last one goes in the left, while the index 1 goes at his right. All the others go in the top
+         * **/
+        // Players in the order of play (with userPlayer included)
+        ArrayList<Player> playersWithUser = game.getTable().getPlayers();
+        // the avatarsPath are now ordered like the players List took in the beginning.
+        // while the playersList has now changed, the avatarsPath one did NOT.
+        // it has to change according to the position of the players. We will do that with a function
+
+        // AvatarPaths in the order of play (with userPlayer included)
+        ArrayList<String> avatarsPathWithUser = changePositionOfAvatarsPath(avatarsPath, players, playersWithUser);
+        // Players in the order of play (withOUT userPlayer included)
+        ArrayList<Player> enemyPlayers = getPlayersWithoutUser(playersWithUser, userPlayer);
+        // AvatarPaths in the order of play (withOUT userPlayer included)
+        ArrayList<String> enemyAvatarPaths =getPlayersWithoutUser(avatarsPathWithUser, user.getAvatar().getAvatarPath());
+
+        /**
+         * if playersNumber == 2{
+         * have a class for that to instantiate}
+         * if playersNumber == 3{
+         * have a class for that to instantiate}
+         * if playersNumebr > 3{
+         * have a class for that to instantiate}
+         * ***/
+
+        /*ENEMY GUI WILL BE FOR 2, 3 and 4 players since we will have 1 enemy at the top**/
+        if(playersNumber == 2){
+            Player enemy = enemyPlayers.get(0);
+            String enemyAvatarPath = enemyAvatarPaths.get(0);
+            enemyGUI = new OneEnemyGUI(cardBackPath,enemy, enemyAvatarPath);
+        }
+        else if(playersNumber == 3){
+            Player leftEnemy = enemyPlayers.get(1);
+            String leftAvatarPath = enemyAvatarPaths.get(1);
+            leftEnemyPanel = new LeftEnemyPanel(cardBackPath, leftEnemy , leftAvatarPath);
+            Player topEnemy = enemyPlayers.get(0);
+            String topAvatarPath = enemyAvatarPaths.get(0);
+            enemyGUI = new OneEnemyGUI(cardBackPath, topEnemy, topAvatarPath );
+        }
+
 
 
         /*
@@ -51,69 +108,94 @@ public class GameGUI {
 
         /**START TO REFACTOR*/
         gameFrame = new JFrame();
-        gameFrame.setSize(frameWidth,frameHeight);
+        gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        gameFrame.setUndecorated(true);
         JPanel infoPanel = getInfoPanel(userPlayer, user);
         JPanel cardsPanel = getUserCardsPanel(userPlayer);
         JPanel unoPanel = getUnoPanel();
-        JPanel middleConta = getCenterDDeckAndGCard(backPath, game.getTable().getGroundCard());
-        JPanel gamePanel = getGamePanel(infoPanel, cardsPanel, unoPanel, middleConta);
+        JPanel middleConta = getCenterDDeckAndGCard(cardBackPath, game.getTable().getGroundCard());
+        JPanel gamePanel = getGamePanel(infoPanel, cardsPanel, unoPanel, middleConta, enemyGUI, leftEnemyPanel);
         JPanel sidePanel = getSidePanel();
         gameFrame.add(gamePanel, BorderLayout.CENTER);
         gameFrame.add(sidePanel, BorderLayout.EAST);
 
 
-        /**
-         * TO remove because the game will only run on full screen. Why would someone play without full screen
-         * **/
-        gameFrame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                super.componentResized(e);
-
-                if(e.getComponent().getWidth() < frameWidth || e.getComponent().getHeight() < frameHeight){
-                    gameFrame.setSize(frameWidth, frameHeight);
-                }
-            }
-        });
 
         //frame.add(sidePanel, BorderLayout.EAST);
-        gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //gameFrame.setUndecorated(true);
         gameFrame.setVisible(true);
         /**END TO REFACTOR**/
 
     }
 
-    public ArrayList<Player> createPlayers(User user, int playersNumber){
-        // Create a random list of players for the game
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(new Player(user.getUsername(), false));
-        System.out.println(playersNumber);
-        for(int i = 0; i < playersNumber-1; i++){
-            // this players will call the Player constructor which will set isBot to true by default
-            players.add(new Player(getRandomName()));
-        }
-        return players;
-    }
-
-    public String getRandomName(){
-        // Generate a random name from the underneath list
-        /**TODO
-         * add a list of pathnames for the folder with avatars related to the names
-         * **/
-        ArrayList<String> names = Stream.of("Steve Jobs", "James Gosling", "Bill Gates", "Mark Zuckerberg", "Lex Fridman", "Alan Turing", "Kurt Godel", "Linus Torvald", "Terry A. Davis","Ludwig Wittgenstein", "J. R. R. Tolkien","Fedor Dostoevskij", "J.K. Rowling", "George R.R. Martin", "Steven Spielberg", "Stanley Kubrick", "Liam Neeson", "Ada Lovelace", "Donald Knuth", "Kevin Mitnick", "George Hotz", "Elliot Alderson", "Tyrion Lannister" , "Walter White","Ezio Auditore", "Natan Drake", "Spiderman", "Harry Potter", "Ron Weasley", "Hermione Granger", "Jordan Peterson", "Karl Marx", "John Nash", "Aaron Swartz", "John Bradshaw", "Andrew Ng", "Friedrich Nietzsche", "Pier Paolo Pasolini", "Elsa Morante", "Alberto Moravia", "Giacomo Leopardi", "Dante Alighieri", "Publio Virgilio Marone", "Lucio Anneo Seneca", "Sigmund Freud", "Carl Jung", "Franz Kafka", "Carmelo Bene", "Rancore", "Caparezza", "Jack Nicholson","Francesco Guccini" ,"Fabrizio De André","Federico Fellini", "Robert De Niro" ,"Jennifer Connelly", "Neo",
+    public LinkedHashMap<Player, String> createPlayerToAvatarMap(User user, int playersNumber){
+        // create names and avatarsPath lists
+        ArrayList<String> names = Stream.of("Steve Jobs", "James Gosling", "Bill Gates", "Mark Zuckerberg", "Lex Fridman", "Alan Turing", "Kurt Godel", "Linus Torvald", "Terry A. Davis","Ludwig Wittgenstein", "J. R. R. Tolkien","Fedor Dostoevskij", "J.K. Rowling", "George R.R. Martin", "Steven Spielberg", "Stanley Kubrick", "Liam Neeson", "Ada Lovelace", "Donald Knuth", "Kevin Mitnick", "George Hotz", "Elliot Alderson", "Tyrion Lannister" , "Walter White","Ezio Auditore", "Natan Drake", "Spiderman", "Harry Potter", "Ron Weasley", "Hermione Granger", "Jordan Peterson", "Karl Marx", "John Nash", "Aaron Swartz", "John Bradshaw", "Andrew Ng", "Friedrich Nietzsche", "Pier Paolo Pasolini", "Elsa Morante", "Alberto Moravia", "Giacomo Leopardi", "Dante Alighieri", "Virgilio", "Lucio Anneo Seneca", "Sigmund Freud", "Carl Jung", "Franz Kafka", "Carmelo Bene", "Rancore", "Caparezza", "Jack Nicholson","Francesco Guccini" ,"Fabrizio De André","Federico Fellini", "Robert De Niro" ,"Jennifer Connelly", "Neo",
                 "Merle Robbin").collect(Collectors.toCollection(ArrayList::new));
 
         ArrayList<String> avatarsPath = Stream.of("steve_jobs.jpeg","james_gosling.png" , "bill_gates.jpeg","mark_zuckerberg.jpeg", "lex_fridman.png", "alan_turing.jpeg", "kurt_godel.jpeg", "linus_torvalds.png", "terry_a_davis.jpeg", "ludwig_wittgenstein.jpeg", "j_r_r_tolkien.jpeg", "fedor_dostoevskij.jpeg", "j_k_rowling.jpeg", "george_r_r_martin.jpg", "steven_spielberg.jpeg", "stanley_kubrick.jpeg", "liam_neeson.jpeg", "ada_lovelace.jpeg", "donald_knuth.jpeg", "kevin_mitnick.jpeg", "george_hotz.jpeg", "elliot_alderson.jpeg", "tyrion_lannister.jpeg", "walter_white.png", "ezio_auditore.png", "natan_drake.png", "spiderman.jpeg", "harry_potter.png", "ron_weasley.jpeg", "hermione_granger.jpeg", "jordan_peterson.jpeg", "karl_marx.jpeg", "john nash.jpeg", "aaron_swartz.jpeg", "john bradshaw.jpeg", "andrew_ng.jpeg", "friedrich_nietzsche.jpeg", "pier_paolo_pasolini.jpeg", "elsa_morante.jpeg", "alberto_moravia.jpeg",  "giacomo_leopardi.jpeg", "dante_alighieri.jpeg",  "virgilio.png", "lucio_anneo_seneca.jpeg",  "sigmund_freud.jpeg", "carl_jung.jpeg",  "franz_kafka.jpeg", "carmelo_bene.jpeg",  "rancore.jpeg", "caparezza.jpeg",  "jack-nicholson.jpeg", "francesco_guccini.png",  "fabrizio_de_andre.jpeg", "federico_fellini.jpeg",  "robert_de_niro.jpeg", "jennifer_connelly.png", "neo.jpeg"
                         , "merle_robbins.jpeg" )
-                                .map(name -> "src/BotAvatars/" + name)
-                                .collect(Collectors.toCollection(ArrayList::new));
+                .map(name -> "src/BotAvatars/" + name)
+                .collect(Collectors.toCollection(ArrayList::new));
 
-        Random rand = new Random();
-        int randIdx = rand.nextInt(names.size());
-        return names.remove(randIdx);
+        // the map keeps a player object and an avatarPath String
+        LinkedHashMap<Player, String> playerToAvatarMap = new LinkedHashMap<>();
+        playerToAvatarMap.put(new Player(user.getUsername(), false), user.getAvatar().getAvatarPath());
+
+        for(int i = 0; i < playersNumber-1 ;i++){
+            Random rand = new Random();
+            int randIdx = rand.nextInt(names.size());
+            playerToAvatarMap.put(new Player(names.remove(randIdx)), avatarsPath.remove(randIdx));
+        }
+        return playerToAvatarMap;
     }
 
+    public <P,S> ArrayList<P> getPlayersWithoutUser(ArrayList<P> playersWithUser, S userPlayer){
+        /*
+        * Returns a list that behaves like the demonstration here:
+        * StartingList1 = [enemy1, userPlayer, enemy3] --> FinalList1 = [enemy3, enemy1]
+        * StartingList2 = [userPlayer, enemy1, enemy2] --> FinalList2 = [enemy1, enemy3]
+        * The last element will be the enemy at the left of the user, while the first will be the enemy at his right
+        * All the others (in case there are others) will be displayed in a reverse FlowLayout in the fourToNineEnemies class
+        * */
+        if (playersWithUser.get(0) == userPlayer){
+            playersWithUser.remove(0);
+            return playersWithUser;
+        }
+        else{
+            int i = 0;
+            ArrayList<P> beforeUser = new ArrayList<>();
+            ArrayList<P> afterUser = new ArrayList<>();
+            while(playersWithUser.get(i) != userPlayer){
+                beforeUser.add(playersWithUser.get(i++));
+            }
+            i+=1;
+            while(i < playersWithUser.size()){
+                afterUser.add(playersWithUser.get(i++));
+            }
+            afterUser.addAll(beforeUser);
+            return afterUser;
+        }
+    }
+
+    public ArrayList<String> changePositionOfAvatarsPath(ArrayList<String> oldAvatarPaths
+                                                        , ArrayList<Player> oldPlayers
+                                                        , ArrayList<Player> newPlayers ){
+        /*
+        * L1 and L2 are ordered together but...
+        * L1old = [a,b,c,d,e,f] -> has changed to -> [b,e,f,c,a,d] = L1new
+        * L2old = [1,2,3,4,5,6] ...we want to have...[2,5,6,3,1,4] = L2new
+        */
+        ArrayList<String> newAvatarPaths = new ArrayList<>();
+        for(Player player: newPlayers){
+            newAvatarPaths.add(oldAvatarPaths.get(oldPlayers.indexOf(player)));
+        }
+        return newAvatarPaths;
+    }
+
+    /**
+     * Will everything go here???
+     * Else TODO remove this.
+     * **/
     public JFrame getGameGUI(Player userPlayer){
         JFrame frame = new JFrame();
         frame.setLayout(new BorderLayout());
@@ -125,36 +207,48 @@ public class GameGUI {
     }
 
 
-    public JPanel getGamePanel(JPanel infoPanel, JPanel cardsPanel, JPanel unoPanel, JPanel middleConta ){
+    public JPanel getGamePanel(JPanel infoPanel, JPanel cardsPanel, JPanel unoPanel,
+                               JPanel middleContainer, OneEnemyGUI enemyGUI,
+                               LeftEnemyPanel leftEnemyPanel ){
+
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         mainPanel.setSize(1000,800);
-        //frame.setResizable(false); ALLOW THIS ONLY FROM SETTINGS
 
-        JPanel panel1 = new JPanel();
-        panel1.setBackground(Color.black);
-        panel1.setPreferredSize(new Dimension(1000,280));
-        JPanel panel2 = new JPanel();
+        JPanel panel1 = new JPanel(new BorderLayout());
+        panel1.setSize(1000,280);
+        panel1.add(enemyGUI.getEnemyInfoPanel(), BorderLayout.WEST);
+        JPanel innerPanel1 = new JPanel(new GridBagLayout()); // to center everything in case of 2 nplayers
+        innerPanel1.add(enemyGUI.getEnemyCardsContainerPanel());
+        panel1.add(innerPanel1, BorderLayout.CENTER);
+        panel1.add(Box.createHorizontalStrut(150), BorderLayout.EAST);
+
+        JPanel panel2 = new JPanel(new BorderLayout());
         panel2.setBackground(Color.red);
-        panel2.setPreferredSize(new Dimension(350,260));
+        panel2.setSize(350,260);
+        //panel2.add(leftEnemyPanel.getLeftInfoPanel() ,BorderLayout.CENTER);
+
+
         JPanel panel3 = new JPanel(new BorderLayout());
         panel3.setBackground(Color.green);
         panel3.setSize(new Dimension(300,260));
-        panel3.add(middleConta);
+        panel3.add(middleContainer);
+
         JPanel panel4 = new JPanel();
         panel4.setBackground(Color.magenta);
         panel4.setPreferredSize(new Dimension(350,260));
+
         JPanel panel5 = new JPanel(new BorderLayout());
-        panel5.setBackground(Color.cyan);
-        panel5.setSize(new Dimension(1000,280));
+        panel5.setSize(1000,280);
         panel5.add(infoPanel, BorderLayout.WEST);
         panel5.add(cardsPanel, BorderLayout.CENTER);
         panel5.add(unoPanel, BorderLayout.EAST);
 
+
         mainPanel.add(panel1, BorderLayout.NORTH);
-        mainPanel.add(panel2, BorderLayout.EAST);
+        mainPanel.add(panel2, BorderLayout.WEST);
         mainPanel.add(panel3, BorderLayout.CENTER);
-        mainPanel.add(panel4, BorderLayout.WEST);
+        mainPanel.add(panel4, BorderLayout.EAST);
         mainPanel.add(panel5, BorderLayout.SOUTH);
 
         return mainPanel;
@@ -185,10 +279,8 @@ public class GameGUI {
         infoPanel.setSize(new Dimension(150,280));
         JPanel avatarPanel = new JPanel(new GridBagLayout());
         avatarPanel.setPreferredSize(new Dimension(150,200));
-        avatarPanel.setBackground(new Color(100,100,100));
         JPanel namePanel = new JPanel(new BorderLayout());
         namePanel.setPreferredSize(new Dimension(150, 80));
-        namePanel.setBackground(new Color(110,110,200));
 
         JLabel nameLabel = new JLabel(user.getUsername());
         nameLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
@@ -201,6 +293,7 @@ public class GameGUI {
         Image newAvatarImage = avatarImage.getScaledInstance(100,100, Image.SCALE_SMOOTH);
         avatarIcon = new ImageIcon(newAvatarImage);
         JLabel avatarLabel = new JLabel();
+        avatarLabel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
         avatarLabel.setIcon(avatarIcon);
 
         avatarPanel.add(avatarLabel);
@@ -214,8 +307,7 @@ public class GameGUI {
     public JPanel getUserCardsPanel(Player player){
         ArrayList<Card> hand = player.getHand();
 
-        JPanel containerOfCards = new JPanel();
-        containerOfCards.setLayout(new BorderLayout());
+        JPanel containerOfCards = new JPanel(new BorderLayout());
         containerOfCards.setSize(new Dimension(700, 280));
         containerOfCards.setBackground(new Color(200, 100, 29));
         JPanel firstLayerPanel = new JPanel(new FlowLayout());
@@ -223,8 +315,6 @@ public class GameGUI {
 
         JPanel secondLayerPanel = new JPanel(new FlowLayout());
         secondLayerPanel.setPreferredSize(new Dimension(700, 140));
-        System.out.println(hand.size());
-
         if (hand.size() < 8) {
             for (Card card : hand) {
                 ImageIcon cardIcon = new ImageIcon(card.getImagePath());
@@ -292,7 +382,6 @@ public class GameGUI {
 
         JPanel drawBtnPanel = new JPanel(new GridBagLayout());
         drawBtnPanel.setPreferredSize(new Dimension(300,80));
-        drawBtnPanel.setBackground(Color.gray);
 
         JButton drawBtn = new JButton("PESCA");
         drawBtn.setFont(new Font("Sans Serif", Font.BOLD, 20));
@@ -384,8 +473,8 @@ public class GameGUI {
     }
 
     public static void main(String[] args) {
-        User newUs = new User("Pier Paolo Pasolini", 10, "src/Avatars/me.jpg");
-        GameGUI gg = new GameGUI(newUs,10, Difficulty.EASY, "src/cards/yugioh.png");
+        User newUs = new User("AleMilos", 10, "src/Avatars/me.jpg");
+        GameGUI gg = new GameGUI(newUs,2, Difficulty.EASY, "src/cards/uno_version_3.png");
     }
 
 }

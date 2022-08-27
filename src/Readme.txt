@@ -25,5 +25,5 @@ Con l'attuale struttura a funzioni del GameGui non è possibile accedere a panne
 dentro classi specifiche così da avere campi privati con i JPanel in modo tale da potervi accedere distruttivamente,
 senza dover renderizzare ogni volta il tutto sprecando risorse di sistema(anche se un bel sticazzi mi viene da dirlo
 data la misura del progetto e data la potenza di calcolo della mia cpu diocane)
-
+- if hovering the deck --> show cards left
 

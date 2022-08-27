@@ -36,7 +36,7 @@ public class Player {
         return isBot;
     }
 
-    public boolean isHasUno() {
+    public boolean hasUno() {
         return hasUno;
     }
 

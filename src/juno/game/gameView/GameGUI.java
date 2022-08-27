@@ -30,8 +30,13 @@ public class GameGUI {
 
     private LeftEnemyPanel  leftEnemyPanel = new LeftEnemyPanel();
 
+    private RightEnemyPanel rightEnemyPanel = new RightEnemyPanel();
+
+    private int playersNumber;
+
     public GameGUI(User user, int playersNumber, Difficulty difficulty, String cardBackPath){
 
+        this.playersNumber = playersNumber;
 
         LinkedHashMap<Player, String> playerToAvatarPath = createPlayerToAvatarMap(user, playersNumber);
         ArrayList<Player> players = new ArrayList<>(playerToAvatarPath.keySet());
@@ -64,7 +69,7 @@ public class GameGUI {
         // the avatarsPath are now ordered like the players List took in the beginning.
         // while the playersList has now changed, the avatarsPath one did NOT.
         // it has to change according to the position of the players. We will do that with a function
-
+        System.out.println(playersWithUser);
         // AvatarPaths in the order of play (with userPlayer included)
         ArrayList<String> avatarsPathWithUser = changePositionOfAvatarsPath(avatarsPath, players, playersWithUser);
         // Players in the order of play (withOUT userPlayer included)
@@ -85,7 +90,7 @@ public class GameGUI {
         if(playersNumber == 2){
             Player enemy = enemyPlayers.get(0);
             String enemyAvatarPath = enemyAvatarPaths.get(0);
-            enemyGUI = new OneEnemyGUI(cardBackPath,enemy, enemyAvatarPath);
+            enemyGUI = new OneEnemyGUI(cardBackPath,enemy, enemyAvatarPath, playersNumber);
         }
         else if(playersNumber == 3){
             Player leftEnemy = enemyPlayers.get(1);
@@ -93,10 +98,20 @@ public class GameGUI {
             leftEnemyPanel = new LeftEnemyPanel(cardBackPath, leftEnemy , leftAvatarPath);
             Player topEnemy = enemyPlayers.get(0);
             String topAvatarPath = enemyAvatarPaths.get(0);
-            enemyGUI = new OneEnemyGUI(cardBackPath, topEnemy, topAvatarPath );
+            enemyGUI = new OneEnemyGUI(cardBackPath, topEnemy, topAvatarPath, playersNumber );
+        }else if (playersNumber == 4){
+            Player leftEnemy = enemyPlayers.get(2);
+            String leftAvatarPath = enemyAvatarPaths.get(2);
+            leftEnemyPanel = new LeftEnemyPanel(cardBackPath, leftEnemy , leftAvatarPath);
+            Player topEnemy = enemyPlayers.get(1);
+            String topAvatarPath = enemyAvatarPaths.get(1);
+            enemyGUI = new OneEnemyGUI(cardBackPath, topEnemy, topAvatarPath, playersNumber );
+            Player rightEnemy = enemyPlayers.get(0);
+            String rightAvatarPath = enemyAvatarPaths.get(0);
+            rightEnemyPanel = new RightEnemyPanel(cardBackPath, rightEnemy, rightAvatarPath);
         }
 
-
+        disableNonPlayingPlayers();
 
         /*
         while("game is running"){
@@ -114,7 +129,7 @@ public class GameGUI {
         JPanel cardsPanel = getUserCardsPanel(userPlayer);
         JPanel unoPanel = getUnoPanel();
         JPanel middleConta = getCenterDDeckAndGCard(cardBackPath, game.getTable().getGroundCard());
-        JPanel gamePanel = getGamePanel(infoPanel, cardsPanel, unoPanel, middleConta, enemyGUI, leftEnemyPanel);
+        JPanel gamePanel = getGamePanel(infoPanel, cardsPanel, unoPanel, middleConta, enemyGUI, leftEnemyPanel, rightEnemyPanel);
         JPanel sidePanel = getSidePanel();
         gameFrame.add(gamePanel, BorderLayout.CENTER);
         gameFrame.add(sidePanel, BorderLayout.EAST);
@@ -127,9 +142,10 @@ public class GameGUI {
 
     }
 
+
     public LinkedHashMap<Player, String> createPlayerToAvatarMap(User user, int playersNumber){
         // create names and avatarsPath lists
-        ArrayList<String> names = Stream.of("Steve Jobs", "James Gosling", "Bill Gates", "Mark Zuckerberg", "Lex Fridman", "Alan Turing", "Kurt Godel", "Linus Torvald", "Terry A. Davis","Ludwig Wittgenstein", "J. R. R. Tolkien","Fedor Dostoevskij", "J.K. Rowling", "George R.R. Martin", "Steven Spielberg", "Stanley Kubrick", "Liam Neeson", "Ada Lovelace", "Donald Knuth", "Kevin Mitnick", "George Hotz", "Elliot Alderson", "Tyrion Lannister" , "Walter White","Ezio Auditore", "Natan Drake", "Spiderman", "Harry Potter", "Ron Weasley", "Hermione Granger", "Jordan Peterson", "Karl Marx", "John Nash", "Aaron Swartz", "John Bradshaw", "Andrew Ng", "Friedrich Nietzsche", "Pier Paolo Pasolini", "Elsa Morante", "Alberto Moravia", "Giacomo Leopardi", "Dante Alighieri", "Virgilio", "Lucio Anneo Seneca", "Sigmund Freud", "Carl Jung", "Franz Kafka", "Carmelo Bene", "Rancore", "Caparezza", "Jack Nicholson","Francesco Guccini" ,"Fabrizio De André","Federico Fellini", "Robert De Niro" ,"Jennifer Connelly", "Neo",
+        ArrayList<String> names = Stream.of("Steve Jobs", "James Gosling", "Bill Gates", "Mark Zuckerberg", "Lex Fridman", "Alan Turing", "Kurt Godel", "Linus Torvald", "Terry A. Davis","Ludwig Wittgenstein", "J. R. R. Tolkien","Fedor Dostoevskij", "J.K. Rowling", "George R.R. Martin", "Steven Spielberg", "Stanley Kubrick", "Liam Neeson", "Ada Lovelace", "Donald Knuth", "Kevin Mitnick", "George Hotz", "Elliot Alderson", "Tyrion Lannister" , "Walter White","Ezio Auditore", "Natan Drake", "Spiderman", "Harry Potter", "Ron Weasley","Hermione Granger", "Jordan Peterson", "Karl Marx", "John Nash", "Aaron Swartz", "John Bradshaw", "Andrew Ng", "Friedrich Nietzsche", "Pier Paolo Pasolini", "Elsa Morante", "Alberto Moravia", "Giacomo Leopardi", "Dante Alighieri", "Virgilio", "Lucio Anneo Seneca", "Sigmund Freud", "Carl Jung", "Franz Kafka", "Carmelo Bene", "Rancore", "Caparezza", "Jack Nicholson","Francesco Guccini" ,"Fabrizio De André","Federico Fellini", "Robert De Niro" ,"Jennifer Connelly", "Neo",
                 "Merle Robbin").collect(Collectors.toCollection(ArrayList::new));
 
         ArrayList<String> avatarsPath = Stream.of("steve_jobs.jpeg","james_gosling.png" , "bill_gates.jpeg","mark_zuckerberg.jpeg", "lex_fridman.png", "alan_turing.jpeg", "kurt_godel.jpeg", "linus_torvalds.png", "terry_a_davis.jpeg", "ludwig_wittgenstein.jpeg", "j_r_r_tolkien.jpeg", "fedor_dostoevskij.jpeg", "j_k_rowling.jpeg", "george_r_r_martin.jpg", "steven_spielberg.jpeg", "stanley_kubrick.jpeg", "liam_neeson.jpeg", "ada_lovelace.jpeg", "donald_knuth.jpeg", "kevin_mitnick.jpeg", "george_hotz.jpeg", "elliot_alderson.jpeg", "tyrion_lannister.jpeg", "walter_white.png", "ezio_auditore.png", "natan_drake.png", "spiderman.jpeg", "harry_potter.png", "ron_weasley.jpeg", "hermione_granger.jpeg", "jordan_peterson.jpeg", "karl_marx.jpeg", "john nash.jpeg", "aaron_swartz.jpeg", "john bradshaw.jpeg", "andrew_ng.jpeg", "friedrich_nietzsche.jpeg", "pier_paolo_pasolini.jpeg", "elsa_morante.jpeg", "alberto_moravia.jpeg",  "giacomo_leopardi.jpeg", "dante_alighieri.jpeg",  "virgilio.png", "lucio_anneo_seneca.jpeg",  "sigmund_freud.jpeg", "carl_jung.jpeg",  "franz_kafka.jpeg", "carmelo_bene.jpeg",  "rancore.jpeg", "caparezza.jpeg",  "jack-nicholson.jpeg", "francesco_guccini.png",  "fabrizio_de_andre.jpeg", "federico_fellini.jpeg",  "robert_de_niro.jpeg", "jennifer_connelly.png", "neo.jpeg"
@@ -209,7 +225,8 @@ public class GameGUI {
 
     public JPanel getGamePanel(JPanel infoPanel, JPanel cardsPanel, JPanel unoPanel,
                                JPanel middleContainer, OneEnemyGUI enemyGUI,
-                               LeftEnemyPanel leftEnemyPanel ){
+                               LeftEnemyPanel leftEnemyPanel,
+                               RightEnemyPanel rightEnemyPanel){
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -224,19 +241,23 @@ public class GameGUI {
         panel1.add(Box.createHorizontalStrut(150), BorderLayout.EAST);
 
         JPanel panel2 = new JPanel(new BorderLayout());
-        panel2.setBackground(Color.red);
-        panel2.setSize(350,260);
-        //panel2.add(leftEnemyPanel.getLeftInfoPanel() ,BorderLayout.CENTER);
-
+        panel2.setPreferredSize(new Dimension(350, 260));
+        if (this.playersNumber > 2) {
+            panel2.add(leftEnemyPanel.getLeftInfoPanel(), BorderLayout.WEST);
+            panel2.add(leftEnemyPanel.getPanelForLayPane(), BorderLayout.CENTER);
+        }
 
         JPanel panel3 = new JPanel(new BorderLayout());
         panel3.setBackground(Color.green);
         panel3.setSize(new Dimension(300,260));
         panel3.add(middleContainer);
 
-        JPanel panel4 = new JPanel();
-        panel4.setBackground(Color.magenta);
+        JPanel panel4 = new JPanel(new BorderLayout());
         panel4.setPreferredSize(new Dimension(350,260));
+        if (this.playersNumber > 3){
+            panel4.add(rightEnemyPanel.getPanelForLayPane(),BorderLayout.CENTER);
+            panel4.add(rightEnemyPanel.getRightInfoPanel(),BorderLayout.EAST);
+        }
 
         JPanel panel5 = new JPanel(new BorderLayout());
         panel5.setSize(1000,280);
@@ -474,7 +495,7 @@ public class GameGUI {
 
     public static void main(String[] args) {
         User newUs = new User("AleMilos", 10, "src/Avatars/me.jpg");
-        GameGUI gg = new GameGUI(newUs,2, Difficulty.EASY, "src/cards/uno_version_3.png");
+        GameGUI gg = new GameGUI(newUs,4, Difficulty.EASY, "src/cards/uno_version_3.png");
     }
 
 }

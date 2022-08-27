@@ -13,7 +13,7 @@ thing I did with the avatar image.
 
 
 GAME:
-- JLayeredPane to display cards over cards
+- Make fake screens for loading etc..(pregame needs it)
 - NOT playing players will have avatar Image NOT enabled, While when they are playing their avatar will be ENABLED
 so will show a color. Maybe we will have some effect on this, like slowly increasing his Height and Width
 - Json file for AI: [{name: Harry Potter, avatar: harrypotter.jpg}] ad ogni nome si associa una faccia

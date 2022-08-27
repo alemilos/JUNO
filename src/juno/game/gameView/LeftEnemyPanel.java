@@ -1,5 +1,6 @@
 package juno.game.gameView;
 
+import juno.game.gameModel.Card;
 import juno.game.gameModel.Player;
 
 import javax.swing.*;
@@ -15,6 +16,8 @@ public class LeftEnemyPanel extends JPanel {
      * **/
 
     private JLayeredPane leftCardsLayeredPane;
+
+    private JPanel panelForLayPane;
     private JPanel leftInfoPanel;
     private JPanel leftAvatarPanel;
 
@@ -46,17 +49,35 @@ public class LeftEnemyPanel extends JPanel {
          **/
 
          leftCardsLayeredPane = new JLayeredPane();
-         leftCardsLayeredPane.setPreferredSize(new Dimension(200, 260));
+         //leftCardsLayeredPane.setPreferredSize(new Dimension(200, 260));
+         leftCardsLayeredPane.setBounds(0,0,200,260);
+
+         int y = 0;
+
+         for (int i = 0; i<enemy.getHand().size(); i++) {
+             ImageIcon cardBackIcon = new ImageIcon(cardBackPath);
+             Image cardBackImage = cardBackIcon.getImage();
+             Image newCardBackImage = cardBackImage.getScaledInstance(75, 120, Image.SCALE_SMOOTH);
+             cardBackIcon = new ImageIcon(newCardBackImage);
+             RotatedIcon rotatedCardBackIcon = new RotatedIcon(cardBackIcon, RotatedIcon.Rotate.DOWN);
+             JLabel cardLabel = new JLabel(rotatedCardBackIcon);
+             cardLabel.setBounds(25,y,120,75);
+             leftCardsLayeredPane.add(cardLabel, Integer.valueOf(i));
+             y += 8;
+         }
+
+         panelForLayPane = new JPanel(null);
+         panelForLayPane.add(leftCardsLayeredPane);
 
          leftInfoPanel = new JPanel(new BorderLayout());
          leftInfoPanel.setSize(150,260);
 
          leftAvatarPanel= new JPanel(new GridBagLayout());
-         leftAvatarPanel.setPreferredSize(new Dimension(150, 200));
+         leftAvatarPanel.setPreferredSize(new Dimension(150, 120));
 
          ImageIcon leftAvatarIcon = new ImageIcon(enemyAvatarPath);
          Image leftAvatarImage = leftAvatarIcon.getImage();
-         Image newLeftAvatarImage = leftAvatarImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+         Image newLeftAvatarImage = leftAvatarImage.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
          leftAvatarIcon = new ImageIcon(newLeftAvatarImage);
          leftAvatarLabel = new JLabel();
          leftAvatarLabel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
@@ -65,9 +86,13 @@ public class LeftEnemyPanel extends JPanel {
          leftAvatarPanel.add(leftAvatarLabel);
 
          leftNamePanel = new JPanel(new BorderLayout());
-         leftNamePanel.setPreferredSize(new Dimension(150, 60));
+         leftNamePanel.setPreferredSize(new Dimension(150, 140));
 
          JLabel nameLabel = new JLabel(enemy.getName());
+         leftNamePanel.add(nameLabel);
+         nameLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
+         nameLabel.setHorizontalAlignment(JLabel.CENTER);
+         nameLabel.setVerticalAlignment(JLabel.TOP);
          leftNamePanel.add(nameLabel);
 
          leftInfoPanel.add(leftAvatarPanel, BorderLayout.CENTER);
@@ -83,4 +108,7 @@ public class LeftEnemyPanel extends JPanel {
         return leftCardsLayeredPane;
     }
 
+    public JPanel getPanelForLayPane(){
+        return panelForLayPane;
+    }
 }

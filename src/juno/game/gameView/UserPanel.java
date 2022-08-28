@@ -89,13 +89,30 @@ public class UserPanel extends JPanel {
         secondCardsLayer.setPreferredSize(new Dimension(700, 140));
 
         for(int i = 0; i < hand.size(); i++){
+            //responsive values
+            int maxCardNumberPerLayer = hand.size() >= 20
+                    ? (hand.size() > 24 ? 14 : 12)
+                    : (hand.size() < 11 ? 8: 10) ;
+            int widthPerCard = hand.size() >= 20
+                    ? (hand.size() > 24 ? 45 : 55)
+                    : (hand.size() < 11 ? 75: 65);
+            int heightPerCard =  120;
+            if (hand.size() < 8){
+                heightPerCard = 160;
+                widthPerCard = 90;
+                firstCardsLayer.setPreferredSize(new Dimension(700,200));
+                secondCardsLayer.setPreferredSize(new Dimension(700,80));
+            }
+            // riesco a mettere nella mano del player fino a 28 carte. Se le supera vuoldire che sta trollando
+            // o che deve cambiare gioco per dignità
+
             Card card = hand.get(i);
             ImageIcon cardIcon = new ImageIcon(card.getImagePath());
             Image cardImage = cardIcon.getImage();
-            Image newCardImage = cardImage.getScaledInstance(65, 120, Image.SCALE_SMOOTH);
+            Image newCardImage = cardImage.getScaledInstance(widthPerCard, heightPerCard, Image.SCALE_SMOOTH);
             cardIcon = new ImageIcon(newCardImage);
             JButton cardButton = new JButton(cardIcon);
-            if (i < 11 ){
+            if (i < maxCardNumberPerLayer ){
                 firstCardsLayer.add(cardButton);
             }else{
                 secondCardsLayer.add(cardButton);

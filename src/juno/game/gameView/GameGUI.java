@@ -32,6 +32,8 @@ public class GameGUI {
 
     private JPanel userCardsPanel;
 
+    private UserPanel userPanel;
+
     private OneEnemyGUI enemyGUI;
 
     private LeftEnemyPanel  leftEnemyPanel = new LeftEnemyPanel();
@@ -134,13 +136,10 @@ public class GameGUI {
         gameFrame = new JFrame();
         gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gameFrame.setUndecorated(true);
-        userInfoPanel = getUserInfoPanel(userPlayer, user);
-        userCardsPanel = getUserCardsPanel(userPlayer);
-        JPanel unoPanel = getUnoPanel();
+        userPanel = new UserPanel(user, userPlayer);
         JPanel middleConta = getCenterDDeckAndGCard(cardBackPath, game.getTable().getGroundCard());
-        JPanel gamePanel = getGamePanel(userInfoPanel,
-                                        userCardsPanel,
-                                        unoPanel, middleConta,
+        JPanel gamePanel = getGamePanel(userPanel,
+                                        middleConta,
                                         enemyGUI,
                                         leftEnemyPanel,
                                         rightEnemyPanel,
@@ -265,7 +264,7 @@ public class GameGUI {
     }
 
 
-    public JPanel getGamePanel(JPanel infoPanel, JPanel cardsPanel, JPanel unoPanel,
+    public JPanel getGamePanel(UserPanel userPanel,
                                JPanel middleContainer, OneEnemyGUI enemyGUI,
                                LeftEnemyPanel leftEnemyPanel,
                                RightEnemyPanel rightEnemyPanel,
@@ -309,10 +308,13 @@ public class GameGUI {
 
         JPanel panel5 = new JPanel(new BorderLayout());
         panel5.setSize(1000,280);
-        panel5.add(infoPanel, BorderLayout.WEST);
+        panel5.add(userPanel.getUserPanelContainer());
+        /*panel5.add(infoPanel, BorderLayout.WEST);
         panel5.add(cardsPanel, BorderLayout.CENTER);
         panel5.add(unoPanel, BorderLayout.EAST);
 
+
+         */
 
         mainPanel.add(panel1, BorderLayout.NORTH);
         mainPanel.add(panel2, BorderLayout.WEST);
@@ -340,117 +342,9 @@ public class GameGUI {
         return panel;
     }
 
-    public JPanel getUserInfoPanel(Player userPlayer, User user){
-        /**
-         * To access more information I need to put this in single class
-         * UserGUI
-         **/
-        String avatarPath = user.getAvatar().getAvatarPath();
 
-        JPanel infoPanel = new JPanel(new BorderLayout());
-        infoPanel.setSize(new Dimension(150,280));
-        JPanel avatarPanel = new JPanel(new GridBagLayout());
-        avatarPanel.setPreferredSize(new Dimension(150,200));
-        JPanel namePanel = new JPanel(new BorderLayout());
-        namePanel.setPreferredSize(new Dimension(150, 80));
 
-        JLabel nameLabel = new JLabel(user.getUsername());
-        nameLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
-        nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        nameLabel.setVerticalAlignment(SwingConstants.TOP);
-        namePanel.add(nameLabel);
 
-        ImageIcon avatarIcon = new ImageIcon(avatarPath);
-        Image avatarImage = avatarIcon.getImage();
-        Image newAvatarImage = avatarImage.getScaledInstance(100,100, Image.SCALE_SMOOTH);
-        avatarIcon = new ImageIcon(newAvatarImage);
-        userAvatarLabel = new JLabel();
-        userAvatarLabel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-        userAvatarLabel.setIcon(avatarIcon);
-
-        avatarPanel.add(userAvatarLabel);
-
-        infoPanel.add(avatarPanel, BorderLayout.CENTER);
-        infoPanel.add(namePanel, BorderLayout.SOUTH);
-
-        return infoPanel;
-    }
-
-    public JPanel getUserCardsPanel(Player player){
-        /**
-         * needs to go on a class with getUserInfoPanel
-         * **/
-
-        ArrayList<Card> hand = player.getHand();
-
-        JPanel containerOfCards = new JPanel(new BorderLayout());
-        containerOfCards.setSize(new Dimension(700, 280));
-        containerOfCards.setBackground(new Color(200, 100, 29));
-        JPanel firstLayerPanel = new JPanel(new FlowLayout());
-        firstLayerPanel.setPreferredSize(new Dimension(700, 140));
-
-        JPanel secondLayerPanel = new JPanel(new FlowLayout());
-        secondLayerPanel.setPreferredSize(new Dimension(700, 140));
-        if (hand.size() < 8) {
-            for (Card card : hand) {
-                ImageIcon cardIcon = new ImageIcon(card.getImagePath());
-                Image cardImage = cardIcon.getImage();
-                Image newCardImage = cardImage.getScaledInstance(65, 120, Image.SCALE_SMOOTH);
-                cardIcon = new ImageIcon(newCardImage);
-                JButton cardButton = new JButton(cardIcon);
-                firstLayerPanel.add(cardButton);
-            }
-            containerOfCards.add(firstLayerPanel);
-        }else{
-            for(int i = 0; i < hand.size(); i++){
-                Card card = hand.get(i);
-                ImageIcon cardIcon = new ImageIcon(card.getImagePath());
-                Image cardImage = cardIcon.getImage();
-                Image newCardImage = cardImage.getScaledInstance(65, 120, Image.SCALE_SMOOTH);
-                cardIcon = new ImageIcon(newCardImage);
-                JButton cardButton = new JButton(cardIcon);
-                /**TODO
-                 * style this as a full screen game, without worrying too much on resizing
-                 * **/
-
-                if (i < 8 && gameFrame.getWidth() >= 1200){
-                    firstLayerPanel.add(cardButton);
-                }else if (i < 9 && (gameFrame.getWidth() >= 1300 && gameFrame.getWidth() < 1400)){
-                    firstLayerPanel.add(cardButton);
-                }else if(i < 10 && (gameFrame.getWidth() >= 1400 && gameFrame.getWidth() < 1500)){
-                    firstLayerPanel.add(cardButton);
-                }else{
-                    secondLayerPanel.add(cardButton);
-                }
-            }
-            containerOfCards.add(firstLayerPanel, BorderLayout.CENTER);
-            containerOfCards.add(secondLayerPanel, BorderLayout.SOUTH);
-        }
-
-        return containerOfCards;
-    }
-
-    public  JPanel getUnoPanel(){
-
-        JPanel unoPanel = new JPanel(new GridBagLayout());
-        unoPanel.setPreferredSize(new Dimension(150, 280));
-
-        JButton unoBtn = new JButton();
-        unoBtn.setPreferredSize(new Dimension(150,150));
-        unoBtn.setOpaque(true);
-        unoBtn.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-        unoBtn.setBackground(Color.red);
-
-        JLabel unoLabel = new JLabel("UNO");
-        unoLabel.setFont(new Font("Cabin", Font.BOLD, 50));
-        unoLabel.setForeground(Color.yellow);
-        unoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        unoBtn.add(unoLabel);
-        unoPanel.add(unoBtn);
-
-        return unoPanel;
-    }
 
     public JPanel getCenterDDeckAndGCard(String backCardPath, Card groundCard){
 

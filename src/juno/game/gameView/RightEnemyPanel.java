@@ -15,6 +15,8 @@ public class RightEnemyPanel extends JPanel {
 
     private JLayeredPane rightCardsLayeredPane;
 
+    private int componentHeight = 260;
+
     private JPanel panelForLayPane;
     private JPanel rightInfoPanel;
     private JPanel rightAvatarPanel;
@@ -54,13 +56,13 @@ public class RightEnemyPanel extends JPanel {
         for (int i = 0; i<enemy.getHand().size(); i++) {
             ImageIcon cardBackIcon = new ImageIcon(cardBackPath);
             Image cardBackImage = cardBackIcon.getImage();
-            Image newCardBackImage = cardBackImage.getScaledInstance(75, 120, Image.SCALE_SMOOTH);
+            Image newCardBackImage = cardBackImage.getScaledInstance(65, 100, Image.SCALE_SMOOTH);
             cardBackIcon = new ImageIcon(newCardBackImage);
             RotatedIcon rotatedCardBackIcon = new RotatedIcon(cardBackIcon, RotatedIcon.Rotate.UP);
             JLabel cardLabel = new JLabel(rotatedCardBackIcon);
-            cardLabel.setBounds(25,y,120,75);
-            rightCardsLayeredPane.add(cardLabel, Integer.valueOf(i));
-            y += 8;
+            cardLabel.setBounds(25,y,100,65);
+            rightCardsLayeredPane.add(cardLabel, Integer.valueOf(enemy.getHand().size()-i));
+            y += (int)((componentHeight-75)/(enemy.getHand().size()-1));;
         }
 
         panelForLayPane = new JPanel(null);
@@ -86,7 +88,7 @@ public class RightEnemyPanel extends JPanel {
         rightNamePanel.setPreferredSize(new Dimension(150, 140));
 
         JLabel nameLabel = new JLabel(enemy.getName());
-        rightNamePanel.add(nameLabel);
+        ////rightNamePanel.add(nameLabel);
         nameLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         nameLabel.setHorizontalAlignment(JLabel.CENTER);
         nameLabel.setVerticalAlignment(JLabel.TOP);

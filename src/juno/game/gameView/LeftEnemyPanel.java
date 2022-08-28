@@ -24,6 +24,8 @@ public class LeftEnemyPanel extends JPanel {
     private JLabel leftAvatarLabel;
     private JPanel leftNamePanel;
 
+    private int componentHeight = 260;
+
     public LeftEnemyPanel(){
         // in case we have 2 players...
         leftCardsLayeredPane = new JLayeredPane();
@@ -57,13 +59,15 @@ public class LeftEnemyPanel extends JPanel {
          for (int i = 0; i<enemy.getHand().size(); i++) {
              ImageIcon cardBackIcon = new ImageIcon(cardBackPath);
              Image cardBackImage = cardBackIcon.getImage();
-             Image newCardBackImage = cardBackImage.getScaledInstance(75, 120, Image.SCALE_SMOOTH);
+             Image newCardBackImage = cardBackImage.getScaledInstance(65, 100, Image.SCALE_SMOOTH);
              cardBackIcon = new ImageIcon(newCardBackImage);
              RotatedIcon rotatedCardBackIcon = new RotatedIcon(cardBackIcon, RotatedIcon.Rotate.DOWN);
              JLabel cardLabel = new JLabel(rotatedCardBackIcon);
-             cardLabel.setBounds(25,y,120,75);
+             cardLabel.setBounds(25,y,100,65);
              leftCardsLayeredPane.add(cardLabel, Integer.valueOf(i));
-             y += 8;
+
+             // calculates the space to divide the cards (the -1 is just a guess, there is no math behind)
+             y += (int)((componentHeight-75)/(enemy.getHand().size()-1));
          }
 
          panelForLayPane = new JPanel(null);

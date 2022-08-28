@@ -15,62 +15,62 @@ public class OneEnemyGUI extends JPanel {
      * HEIGHT: 280
      * **/
 
-    private JPanel enemyInfoPanel;
-    private JPanel enemyAvatarPanel;
-    private JLabel enemyAvatarLabel;
-    private JPanel enemyNamePanel;
-    private JLabel enemyNameLabel;
-    private JPanel enemyCardsContainerPanel;
+    private JPanel infoPanel;
+    private JPanel avatarPanel;
+    private JLabel avatarLabel;
+    private JPanel namePanel;
+    private JLabel nameLabel;
+    private JPanel cardsContainerPanel;
 
-    private JPanel enemyCardsPanel;
+    private JPanel cardsPanel;
 
+    private Player enemy;
 
     public OneEnemyGUI(String cardBackPath, Player enemy, String enemyAvatarPath, int playersNumber) {
-        enemyInfoPanel = new JPanel(new BorderLayout());
-        enemyInfoPanel.setSize(150, 280);
+        this.enemy = enemy;
 
-        enemyAvatarPanel = new JPanel(new GridBagLayout());
-        enemyAvatarPanel.setPreferredSize(new Dimension(150, 140));
+        infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setSize(150, 280);
+
+        avatarPanel = new JPanel(new GridBagLayout());
+        avatarPanel.setPreferredSize(new Dimension(150, 140));
 
 
-        enemyNamePanel = new JPanel(new BorderLayout());
-        enemyNamePanel.setPreferredSize(new Dimension(150, 140));
+        namePanel = new JPanel(new BorderLayout());
+        namePanel.setPreferredSize(new Dimension(150, 140));
         if(playersNumber == 2){
-            enemyAvatarPanel.setPreferredSize(new Dimension(150, 200));
-            enemyNamePanel.setPreferredSize(new Dimension(150, 80));
+            avatarPanel.setPreferredSize(new Dimension(150, 200));
+            namePanel.setPreferredSize(new Dimension(150, 80));
 
         }
 
-        enemyNameLabel = new JLabel(enemy.getName());
-        enemyNameLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
-        enemyNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        enemyNameLabel.setVerticalAlignment(SwingConstants.TOP);
-        enemyNamePanel.add(enemyNameLabel);
+        nameLabel = new JLabel(enemy.getName());
+        nameLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        nameLabel.setVerticalAlignment(SwingConstants.TOP);
+        namePanel.add(nameLabel);
 
         ImageIcon enemyAvatarIcon = new ImageIcon(enemyAvatarPath);
         Image enemyAvatarImage = enemyAvatarIcon.getImage();
         Image newEnemyAvatarImage = enemyAvatarImage.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
         enemyAvatarIcon = new ImageIcon(newEnemyAvatarImage);
-        enemyAvatarLabel = new JLabel();
-        enemyAvatarLabel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-        enemyAvatarLabel.setIcon(enemyAvatarIcon);
+        avatarLabel = new JLabel();
+        avatarLabel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+        avatarLabel.setIcon(enemyAvatarIcon);
 
-        enemyAvatarPanel.add(enemyAvatarLabel);
+        avatarPanel.add(avatarLabel);
 
-        enemyInfoPanel.add(enemyAvatarPanel, BorderLayout.CENTER);
-        enemyInfoPanel.add(enemyNamePanel, BorderLayout.SOUTH);
+        infoPanel.add(avatarPanel, BorderLayout.CENTER);
+        infoPanel.add(namePanel, BorderLayout.SOUTH);
 
-        enemyCardsContainerPanel = new JPanel(new BorderLayout());
-        enemyCardsContainerPanel.setSize(700, 280);
+        cardsContainerPanel = new JPanel(new BorderLayout());
+        cardsContainerPanel.setSize(700, 280);
 
-        enemyCardsPanel = new JPanel(new FlowLayout());
-        enemyCardsPanel.setPreferredSize(new Dimension(700, 140));
+        cardsPanel = new JPanel(new FlowLayout());
+        cardsPanel.setPreferredSize(new Dimension(700, 140));
 
         ArrayList<Card> enemyHand = enemy.getHand();
 
-        /**
-         * TODO create a blank panel to align things
-        **/
         for (Card card : enemyHand) {
             ImageIcon cardIcon = new ImageIcon(cardBackPath);
             Image cardImage = cardIcon.getImage();
@@ -78,37 +78,35 @@ public class OneEnemyGUI extends JPanel {
             cardIcon = new ImageIcon(newCardImage);
             JLabel cardLabel = new JLabel();
             cardLabel.setIcon(cardIcon);
-            enemyCardsPanel.add(cardLabel);
+            cardsPanel.add(cardLabel);
         }
 
-        enemyCardsContainerPanel.add(enemyCardsPanel);
+        cardsContainerPanel.add(cardsPanel);
     }
 
-    public JPanel getEnemyInfoPanel(){
-        return enemyInfoPanel;
+    public JPanel getInfoPanel(){
+        return infoPanel;
     }
 
-    public JPanel getEnemyAvatarPanel(){
-        return enemyAvatarPanel;
+    public JPanel getAvatarPanel(){
+        return avatarPanel;
     }
 
-    public JPanel getEnemyNamePanel(){
-        return enemyNamePanel;
+    public JPanel getNamePanel(){
+        return namePanel;
     }
 
-    public JPanel getEnemyCardsContainerPanel(){
-        return enemyCardsContainerPanel;
+    public JPanel getCardsContainerPanel(){
+        return cardsContainerPanel;
     }
 
-
-
-
-    public void offEnabledLabel(){
-        enemyAvatarLabel.setEnabled(false);
+    public void setAvatarLabel(boolean enabled){
+        this.avatarLabel.setEnabled(enabled);
     }
 
-    public void onEnabledLabel(){
-        enemyAvatarLabel.setEnabled(true);
+    public Player getEnemy(){
+        return enemy;
     }
+
 
 }

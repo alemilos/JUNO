@@ -26,4 +26,4 @@ dentro classi specifiche così da avere campi privati con i JPanel in modo tale 
 senza dover renderizzare ogni volta il tutto sprecando risorse di sistema(anche se un bel sticazzi mi viene da dirlo
 data la misura del progetto e data la potenza di calcolo della mia cpu diocane)
 - if hovering the deck --> show cards left
-
+- a card match() function will be used to understand if the drag and drop of a card by the user has worked or not.

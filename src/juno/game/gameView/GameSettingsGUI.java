@@ -12,36 +12,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-public class GameSettingsGUI extends JFrame{
+public class GameSettingsGUI extends JFrame implements ActionListener{
 
+    private User user;
     private int playersNumber = 2;
-
-
-    private JButton easyBtn;
-    private JButton hardBtn;
-
-    private JButton randomBtn;
 
     private Difficulty difficulty;
 
-    private String backCardPath;
+    private String cardBackPath = "src/Images/Cards/uno_version_1.png";
 
+    private JFrame mainFrame;
+
+    private JComboBox choosePlayerNumberComboBox;
+
+    private JButton changeCardBtn;
+    private JButton goBackBtn;
+    private JButton startBtn;
+    private JButton easyBtn;
+    private JButton hardBtn;
+    private JButton randomBtn;
     public GameSettingsGUI(User user){
-
-        /**
-         * TO REMEMBER
-         * up left panel inner bottom panel has BOX LAYOUT
-         * up right panel inner bottom panel has BorderLayout
-         *
-         * To center a button in a container
-         * make the container a gridbaglayout and
-         * add(button, new gridbagConstraints)
-         * **/
+        this.user = user;
 
         // FRAME
-        JFrame mainFrame = new JFrame();
+        mainFrame = new JFrame();
         mainFrame.setLayout(new GridLayout(2, 3));
-        mainFrame.setSize(1000, 800);
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        mainFrame.setUndecorated(true);
 
         /***PANELS***/
         // up-left
@@ -56,16 +53,13 @@ public class GameSettingsGUI extends JFrame{
 
         JPanel stylesPanel = new JPanel();
         stylesPanel.setLayout(new BoxLayout(stylesPanel, BoxLayout.Y_AXIS));
-        JButton changeCardBtn = new JButton(" Cambia Carte ");
+        changeCardBtn = new JButton(" Retro Carte ");
         changeCardBtn = addStyleToButton(changeCardBtn);
 
-        JButton changeTableBtn = new JButton("Cambia Tavolo");
-        changeTableBtn = addStyleToButton(changeTableBtn);
 
         stylesPanel.add(Box.createVerticalStrut(40));
         stylesPanel.add(changeCardBtn);
         stylesPanel.add(Box.createVerticalStrut(20));
-        stylesPanel.add(changeTableBtn);
 
         upLeftTOPPanel.add(Box.createVerticalStrut(40));
         upLeftTOPPanel.add(stylesLabel);
@@ -89,12 +83,13 @@ public class GameSettingsGUI extends JFrame{
         JPanel playersPanel = new JPanel(new BorderLayout());
 
         String[] numbers = {"2", "3", "4", "5", "6", "7", "8", "9", "10"};
-        JComboBox choosePlayerNumberComboBox = new JComboBox(numbers);
+        choosePlayerNumberComboBox = new JComboBox(numbers);
         ((JLabel)choosePlayerNumberComboBox.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER); // this centers the input inside the combobox
 
         randomBtn = new JButton("Casuale");
         randomBtn = addStyleToButton(randomBtn);
         randomBtn.setFont(new Font("Sans Serif", Font.BOLD, 20));
+        randomBtn.addActionListener(this);
 
         JPanel randomBtnContainer = new JPanel();
         randomBtnContainer.add(randomBtn);
@@ -137,11 +132,11 @@ public class GameSettingsGUI extends JFrame{
         upRightPanel.add(difficultyPanel, BorderLayout.CENTER);
 
         // down-left
-        ImageIcon goBackIcon = new ImageIcon("src/menuIcons/gobackIcon.png");
+        ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.png");
         Image goBackImage = goBackIcon.getImage();
         Image newGoBackImage = goBackImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         goBackIcon = new ImageIcon(newGoBackImage);
-        JButton goBackBtn = new JButton(goBackIcon);
+        goBackBtn = new JButton(goBackIcon);
 
         JPanel downLeftPanel = new JPanel(new BorderLayout());
         goBackBtn.setVerticalAlignment(JButton.BOTTOM);
@@ -161,7 +156,7 @@ public class GameSettingsGUI extends JFrame{
         JLabel hereGoesTheImage = new JLabel("image goes here");
         hereGoesTheImage = addStylesToLabel(hereGoesTheImage);
 
-        JButton startBtn = new JButton("Inizia");
+        startBtn = new JButton("Inizia");
         startBtn = addStyleToButton(startBtn);
 
         downCenterPanel.add(hereGoesTheImage, BorderLayout.NORTH);
@@ -169,7 +164,7 @@ public class GameSettingsGUI extends JFrame{
 
         // down-right
 
-        ImageIcon settingsIcon = new ImageIcon("src/menuIcons/settingsIcon.png");
+        ImageIcon settingsIcon = new ImageIcon("src/Images/MenuIcons/settingsIcon.png");
         Image settingsImage = settingsIcon.getImage();
         Image newSettingsImage = settingsImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         settingsIcon = new ImageIcon(newSettingsImage);
@@ -182,91 +177,6 @@ public class GameSettingsGUI extends JFrame{
         JPanel downRightPanel = new JPanel(new BorderLayout());
         downRightPanel.add(downRightInnerBottomPanel, BorderLayout.SOUTH);
 
-        /**ACTION LISTENERS FOR BUTTONS**/
-        // changeCardBtn listener
-        changeCardBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        // changeTableBtn listener
-        changeTableBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
-        // randomBtn listener
-        randomBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Random rand = new Random();
-                int randIndex = rand.nextInt(9);
-                choosePlayerNumberComboBox.setSelectedIndex(randIndex);
-                playersNumber = randIndex+2;
-                randomBtn.setFocusPainted(true);
-            }
-        });
-        // easyBtn & hardBtn
-        easyBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                easyBtn.setBackground(new Color(119,198,110));
-                difficulty = Difficulty.EASY;
-
-                hardBtn.setBackground(new Color(221, 121, 115));
-
-            }
-        });
-
-        hardBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                hardBtn.setBackground(new Color(119,198,110));
-                difficulty = Difficulty.HARD;
-
-                easyBtn.setBackground(new Color(221, 121, 115));
-            }
-        });
-
-
-        // goBackBtn listener
-        goBackBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MenuGUI menu = new MenuGUI(user);
-                mainFrame.dispose();
-            }
-        });
-        // settingsBtn listener
-        settingsBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        // startBtn listener
-        startBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                playersNumber = choosePlayerNumberComboBox.getSelectedIndex() + 2;
-                // +2 perché la combobox è indicizzata da 0 e io ho valori [2,10]
-                boolean isDifficulty = difficulty != null ? true : false;
-                if (isDifficulty) {
-                    ConfirmFrame cf = new ConfirmFrame(mainFrame,
-                                        "GameSettingsGUI",
-                                                        user,
-                                                        playersNumber,
-                                                        difficulty,
-                                                        backCardPath);
-                }
-            }
-        });
-
-
-
         // adding to main frame
 
         mainFrame.add(upLeftPanel);
@@ -278,6 +188,42 @@ public class GameSettingsGUI extends JFrame{
 
         mainFrame.setVisible(true);
 
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == randomBtn) {
+            Random rand = new Random();
+            int randIndex = rand.nextInt(9);
+            choosePlayerNumberComboBox.setSelectedIndex(randIndex);
+            playersNumber = randIndex + 2;
+            randomBtn.setFocusPainted(true);
+        } else if (source == changeCardBtn) {
+            System.out.println("Open chooseBackCard.java");
+        } else if (source == easyBtn) {
+            easyBtn.setBackground(new Color(119, 198, 110));
+            difficulty = Difficulty.EASY;
+            hardBtn.setBackground(new Color(221, 121, 115));
+        } else if (source == hardBtn) {
+            hardBtn.setBackground(new Color(119, 198, 110));
+            difficulty = Difficulty.HARD;
+            easyBtn.setBackground(new Color(221, 121, 115));
+        } else if (source == goBackBtn) {
+            MenuGUI menu = new MenuGUI(user);
+            mainFrame.dispose();
+        } else if (source == startBtn) {
+            playersNumber = choosePlayerNumberComboBox.getSelectedIndex() + 2; // +2 perché la combobox è indicizzata da 0 e io ho valori [2,10]
+            boolean isDifficulty = difficulty != null ? true : false;
+            if (isDifficulty) {
+                ConfirmFrame cf = new ConfirmFrame(mainFrame,
+                        "GameSettingsGUI",
+                        user,
+                        playersNumber,
+                        difficulty,
+                        cardBackPath);
+            }
+        }
     }
 
     public JLabel addStylesToLabel(JLabel label){
@@ -299,4 +245,9 @@ public class GameSettingsGUI extends JFrame{
         button.setFocusPainted(false);
         return button;
     }
+
+    public static String setCardBackPath(String cardBackPath){
+        return cardBackPath;
+    }
+
 }

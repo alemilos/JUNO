@@ -33,7 +33,7 @@ public class ChooseAccount {
         // create a comboBOX
         JComboBox accounts = new JComboBox(usernames);
 
-        ImageIcon goBackIcon = new ImageIcon("src/menuIcons/gobackIcon.png");
+        ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.png");
         Image goBackImage = goBackIcon.getImage();
         Image newGoBackImage = goBackImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         goBackIcon = new ImageIcon(newGoBackImage);
@@ -49,7 +49,7 @@ public class ChooseAccount {
             }
         });
 
-        ImageIcon confirmIcon = new ImageIcon("src/menuIcons/confirmIcon.png");
+        ImageIcon confirmIcon = new ImageIcon("src/Images/MenuIcons/confirmIcon.png");
         Image confirmImage = confirmIcon.getImage();
         Image newConfirmImage = confirmImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         confirmIcon = new ImageIcon(newConfirmImage);

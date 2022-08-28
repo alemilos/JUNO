@@ -91,7 +91,7 @@ public class StartAppView {
         }
 
         // exit Button
-        ImageIcon exitIcon = new ImageIcon("src/menuIcons/exitIcon.png");
+        ImageIcon exitIcon = new ImageIcon("src/Images/MenuIcons/exitIcon.png");
         Image exitImage = exitIcon.getImage();
         Image newExitImage = exitImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         exitIcon = new ImageIcon(newExitImage);

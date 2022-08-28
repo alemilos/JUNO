@@ -35,14 +35,14 @@ public class MenuGUI {
         title.setVerticalAlignment(JLabel.CENTER);
 
         // Settings Button
-        ImageIcon settingsIcon = new ImageIcon("src/menuIcons/settingsIcon.png");
+        ImageIcon settingsIcon = new ImageIcon("src/Images/MenuIcons/settingsIcon.png");
         Image settingsImage = settingsIcon.getImage();
         Image newSettingsImage = settingsImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         settingsIcon = new ImageIcon(newSettingsImage);
         JButton settingsBtn = new JButton(settingsIcon);
 
         // Profile Button
-        ImageIcon profileIcon = new ImageIcon("src/menuIcons/profileIcon.jpeg");
+        ImageIcon profileIcon = new ImageIcon("src/Images/MenuIcons/profileIcon.jpeg");
         Image profileImage = profileIcon.getImage();
         Image newProfileImage = profileImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         profileIcon = new ImageIcon(newProfileImage);

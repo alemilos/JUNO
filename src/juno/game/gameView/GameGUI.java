@@ -26,11 +26,7 @@ public class GameGUI {
 
     private JFrame gameFrame;
 
-    private JPanel userInfoPanel;
-
-    private JLabel userAvatarLabel;
-
-    private JPanel userCardsPanel;
+    private SidePanel sidePanel;
 
     private UserPanel userPanel;
 
@@ -84,7 +80,10 @@ public class GameGUI {
 
         ArrayList<String> enemyAvatarPaths = getPlayersWithoutUser(avatarsPathWithUser, user.getAvatar().getAvatarPath());
 
-        /**ENEMY GUI WILL BE FOR 2, 3 and 4 players since we will have 1 enemy at the top**/
+        /**ENEMY GUI WILL BE FOR 2, 3 and 4 players since we will have 1 enemy at the top
+         *
+         * All of this code will go in the constructors of GamePanel
+         * **/
         if(playersNumber == 2){
             Player enemy = enemyPlayers.get(0);
             String enemyAvatarPath = enemyAvatarPaths.get(0);
@@ -116,7 +115,6 @@ public class GameGUI {
             rightEnemyPanel = new RightEnemyPanel(cardBackPath, rightEnemy, rightAvatarPath);
             ArrayList<Player> topEnemies = getTopEnemiesArray(enemyPlayers);
             ArrayList<String> topAvatarPaths = getTopEnemiesArray(enemyAvatarPaths);
-            System.out.println("top enemies: " + topEnemies);
             multipleEnemiesTopGUI = new MultipleEnemiesTopGUI(cardBackPath,topEnemies, topAvatarPaths);
         }
 
@@ -132,7 +130,10 @@ public class GameGUI {
          */
 
 
-        /**START TO REFACTOR*/
+        /**START TO REFACTOR
+         *
+         * Make a JFRAME extend in a class for this
+         * */
         gameFrame = new JFrame();
         gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         gameFrame.setUndecorated(true);
@@ -144,9 +145,9 @@ public class GameGUI {
                                         leftEnemyPanel,
                                         rightEnemyPanel,
                                         multipleEnemiesTopGUI);
-        JPanel sidePanel = getSidePanel();
+        sidePanel = new SidePanel(user, gameFrame);
         gameFrame.add(gamePanel, BorderLayout.CENTER);
-        gameFrame.add(sidePanel, BorderLayout.EAST);
+        gameFrame.add(sidePanel.getSidePanel(), BorderLayout.EAST);
 
 
 
@@ -181,11 +182,11 @@ public class GameGUI {
     public LinkedHashMap<Player, String> createPlayerToAvatarMap(User user, int playersNumber){
         // create names and avatarsPath lists
         ArrayList<String> names = Stream.of("Steve Jobs", "James Gosling", "Bill Gates", "Mark Zuckerberg", "Lex Fridman", "Alan Turing", "Kurt Godel", "Linus Torvald", "Terry A. Davis","Ludwig Wittgenstein", "J. R. R. Tolkien","Fedor Dostoevskij", "J.K. Rowling", "George R.R. Martin", "Steven Spielberg", "Stanley Kubrick", "Liam Neeson", "Ada Lovelace", "Donald Knuth", "Kevin Mitnick", "George Hotz", "Elliot Alderson", "Tyrion Lannister" , "Walter White","Ezio Auditore", "Natan Drake", "Spiderman", "Harry Potter", "Ron Weasley","Hermione Granger", "Jordan Peterson", "Karl Marx", "John Nash", "Aaron Swartz", "John Bradshaw", "Andrew Ng", "Friedrich Nietzsche", "Pier Paolo Pasolini", "Elsa Morante", "Alberto Moravia", "Giacomo Leopardi", "Dante Alighieri", "Virgilio", "Lucio Anneo Seneca", "Sigmund Freud", "Carl Jung", "Franz Kafka", "Carmelo Bene", "Rancore", "Caparezza", "Jack Nicholson","Francesco Guccini" ,"Fabrizio De André","Federico Fellini", "Robert De Niro" ,"Jennifer Connelly", "Neo",
-                "Merle Robbin", "Albus Silente", "Magnus Carlsen", "Rubeus Hagrid", "Rino Gaetano").collect(Collectors.toCollection(ArrayList::new));
+                "Merle Robbin", "Albus Silente", "Magnus Carlsen", "Rubeus Hagrid", "Rino Gaetano", "Edward Snowden").collect(Collectors.toCollection(ArrayList::new));
 
         ArrayList<String> avatarsPath = Stream.of("steve_jobs.jpeg","james_gosling.png" , "bill_gates.jpeg","mark_zuckerberg.jpeg", "lex_fridman.png", "alan_turing.jpeg", "kurt_godel.jpeg", "linus_torvalds.png", "terry_a_davis.jpeg", "ludwig_wittgenstein.jpeg", "j_r_r_tolkien.jpeg", "fedor_dostoevskij.jpeg", "j_k_rowling.jpeg", "george_r_r_martin.jpg", "steven_spielberg.jpeg", "stanley_kubrick.jpeg", "liam_neeson.jpeg", "ada_lovelace.jpeg", "donald_knuth.jpeg", "kevin_mitnick.jpeg", "george_hotz.jpeg", "elliot_alderson.jpeg", "tyrion_lannister.jpeg", "walter_white.png", "ezio_auditore.png", "natan_drake.png", "spiderman.jpeg", "harry_potter.png", "ron_weasley.jpeg", "hermione_granger.jpeg", "jordan_peterson.jpeg", "karl_marx.jpeg", "john nash.jpeg", "aaron_swartz.jpeg", "john bradshaw.jpeg", "andrew_ng.jpeg", "friedrich_nietzsche.jpeg", "pier_paolo_pasolini.jpeg", "elsa_morante.jpeg", "alberto_moravia.jpeg",  "giacomo_leopardi.jpeg", "dante_alighieri.jpeg",  "virgilio.png", "lucio_anneo_seneca.jpeg",  "sigmund_freud.jpeg", "carl_jung.jpeg",  "franz_kafka.jpeg", "carmelo_bene.jpeg",  "rancore.jpeg", "caparezza.jpeg",  "jack-nicholson.jpeg", "francesco_guccini.png",  "fabrizio_de_andre.jpeg", "federico_fellini.jpeg",  "robert_de_niro.jpeg", "jennifer_connelly.png", "neo.jpeg"
-                        , "merle_robbins.jpeg", "albus_silente.jpeg", "magnus_carlsen.jpeg", "rubeus_hagrid.png", "rino_gaetano.jpeg" )
-                .map(name -> "src/BotAvatars/" + name)
+                        , "merle_robbins.jpeg", "albus_silente.jpeg", "magnus_carlsen.jpeg", "rubeus_hagrid.png", "rino_gaetano.jpeg", "edward_snowden.jpeg" )
+                .map(name -> "src/Images/BotAvatars/" + name)
                 .collect(Collectors.toCollection(ArrayList::new));
 
         // the map keeps a player object and an avatarPath String
@@ -325,27 +326,6 @@ public class GameGUI {
         return mainPanel;
     }
 
-    public JPanel getSidePanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setSize(200,800);
-
-        JPanel panel1 = new JPanel();
-        panel1.setBackground(Color.yellow);
-        panel1.setPreferredSize(new Dimension(200,400));
-        JPanel panel2 = new JPanel();
-        panel2.setBackground(Color.green);
-        panel2.setPreferredSize(new Dimension(200,400));
-
-        panel.add(panel1, BorderLayout.NORTH);
-        panel.add(panel2, BorderLayout.SOUTH);
-
-        return panel;
-    }
-
-
-
-
-
     public JPanel getCenterDDeckAndGCard(String backCardPath, Card groundCard){
 
         JPanel containerPanel = new JPanel(new BorderLayout());
@@ -406,36 +386,37 @@ public class GameGUI {
 
     public void addImagePathNamesToCards(ArrayList<Card> deck){
         int i = 0;
+        String initialPath = "src/Images/Cards/";
         for (Card card : deck){
             CardTypes type = card.getType();
             switch (type){
                 case CLASSIC -> {
                     String color = card.getColor().toString().toLowerCase();
                     int cardNumber = ((ClassicCard)card).getNumber();
-                    String imagePath = "src/cards/" + color + "_" + cardNumber + ".png";
+                    String imagePath = initialPath + color + "_" + cardNumber + ".png";
                     card.setImagePath(imagePath);
                 }
                 case REVERSE -> {
                     String color = card.getColor().toString().toLowerCase();
-                    String imagePath = "src/cards/" + color + "_reverse.png";
+                    String imagePath = initialPath + color + "_reverse.png";
                     card.setImagePath(imagePath);
                 }
                 case SKIP -> {
                     String color = card.getColor().toString().toLowerCase();
-                    String imagePath = "src/cards/" + color + "_skip.png";
+                    String imagePath = initialPath + color + "_skip.png";
                     card.setImagePath(imagePath);
                 }
                 case DRAW_TWO -> {
                     String color = card.getColor().toString().toLowerCase();
-                    String imagePath = "src/cards/" + color + "_draw2.png";
+                    String imagePath = initialPath + color + "_draw2.png";
                     card.setImagePath(imagePath);
                 }
                 case WILD -> {
-                    String imagePath = "src/cards/wild.png";
+                    String imagePath = initialPath + "wild.png";
                     card.setImagePath(imagePath);
                 }
                 case WILD_DRAW_FOUR -> {
-                    String imagePath = "src/cards/wild_draw4.png";
+                    String imagePath = initialPath + "wild_draw4.png";
                     card.setImagePath(imagePath);
                 }
             }
@@ -443,8 +424,8 @@ public class GameGUI {
     }
 
     public static void main(String[] args) {
-        User newUs = new User("AleMilos", 10, "src/Avatars/me.jpg");
-        GameGUI gg = new GameGUI(newUs,10, Difficulty.EASY, "src/cardsBack/uno_original.png");
+        User newUs = new User("AleMilos", 10, "src/Images/Avatars/me.jpg");
+        GameGUI gg = new GameGUI(newUs,10, Difficulty.EASY, "src/Images/CardsBack/uno_original.png");
     }
 
 }

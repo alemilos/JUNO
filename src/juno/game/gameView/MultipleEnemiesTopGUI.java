@@ -34,7 +34,6 @@ public class MultipleEnemiesTopGUI {
         int enemyComponentWidth = (int)(1000/playersNumber); // panel width divided by number of players
 
         for (int i= 0; i < playersNumber; i++){
-            System.out.println(i + " " + enemies.get(i));
             EnemyComponent enemyComponent =
                     new EnemyComponent(enemyComponentWidth, enemies.get(i), avatarPaths.get(i), cardBackPath);
 

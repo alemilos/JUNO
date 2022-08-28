@@ -1,6 +1,9 @@
 DELETE THIS AFTER PROGRAM IS DONE
 
-TO DOS...
+TODOS...
+
+GENERAL:
+- make an Images folder and put every folder containing images there
 
 MENU:
 - Find a way to open frames with the same W and H of the parent frame (IFF the parent get disposed)
@@ -13,6 +16,7 @@ thing I did with the avatar image.
 
 
 GAME:
+- Look at rules : if wild cards land on the ground card as first cards, look what to do.
 - Make fake screens for loading etc..(pregame needs it)
 - NOT playing players will have avatar Image NOT enabled, While when they are playing their avatar will be ENABLED
 so will show a color. Maybe we will have some effect on this, like slowly increasing his Height and Width
@@ -27,3 +31,6 @@ senza dover renderizzare ogni volta il tutto sprecando risorse di sistema(anche 
 data la misura del progetto e data la potenza di calcolo della mia cpu diocane)
 - if hovering the deck --> show cards left
 - a card match() function will be used to understand if the drag and drop of a card by the user has worked or not.
+
+- Better than doing a BIG side panel: a button that if clicked modifies the size of the side panel (making it bigger)
+and giving access to the settings and to the leave game button?? ? Maybe is TOO much.

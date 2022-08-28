@@ -90,7 +90,7 @@ public class ProfileGUI extends JFrame{
                 6, 6);       //xPad, yPad
 
         // GoBack Button
-        ImageIcon goBackIcon = new ImageIcon("src/menuIcons/gobackIcon.png");
+        ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.png");
         Image goBackImage = goBackIcon.getImage();
         Image newGoBackImage = goBackImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         goBackIcon = new ImageIcon(newGoBackImage);

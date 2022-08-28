@@ -30,7 +30,7 @@ public class ConfirmFrame extends JFrame{
         confirmLabel.setHorizontalAlignment(JLabel.CENTER);
 
         // Undo BTN
-        ImageIcon undoIcon = new ImageIcon("src/menuIcons/undoIcon.jpeg");
+        ImageIcon undoIcon = new ImageIcon("src/Images/MenuIcons/undoIcon.jpeg");
         Image undoImage = undoIcon.getImage();
         Image newUndoImage = undoImage.getScaledInstance(50,50,Image.SCALE_SMOOTH);
         undoIcon = new ImageIcon(newUndoImage);
@@ -45,7 +45,7 @@ public class ConfirmFrame extends JFrame{
         });
 
         // Confirm BTN
-        ImageIcon confirmIcon = new ImageIcon("src/menuIcons/confirmIcon.png");
+        ImageIcon confirmIcon = new ImageIcon("src/Images/MenuIcons/confirmIcon.png");
         Image confirmImage = confirmIcon.getImage();
         Image newConfirmImage = confirmImage.getScaledInstance(50,50,Image.SCALE_SMOOTH);
         confirmIcon = new ImageIcon(newConfirmImage);

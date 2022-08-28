@@ -3,6 +3,7 @@ package juno.game.gameView;
 import juno.game.gameModel.Player;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class EnemyComponent extends JPanel {
@@ -42,6 +43,8 @@ public class EnemyComponent extends JPanel {
         Image newAvatarImage = avatarImage.getScaledInstance(60,60,Image.SCALE_SMOOTH);
         avatarIcon = new ImageIcon(newAvatarImage);
         avatarLabel = new JLabel(avatarIcon);
+        avatarLabel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+
 
         avatarPanel.add(avatarLabel);
 

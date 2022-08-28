@@ -68,25 +68,19 @@ public class GameGUI {
          *
          * **/
 
-        /**
-         * Make a function that iterate over the game.gettable.getplayers array
-         * finds the userPlayer, and build an array in this way
-         * gettable.getplayers = [enemy1, enemy2 , user, enemy3, enemy4] --> returns [user,enemy3,enemy4,enemy1, enemy2]
-         * so the last one goes in the left, while the index 1 goes at his right. All the others go in the top
-         * **/
         // Players in the order of play (with userPlayer included)
         ArrayList<Player> playersWithUser = game.getTable().getPlayers();
-        // the avatarsPath are now ordered like the players List took in the beginning.
-        // while the playersList has now changed, the avatarsPath one did NOT.
-        // it has to change according to the position of the players. We will do that with a function
-        System.out.println("with user: " + playersWithUser);
-        // AvatarPaths in the order of play (with userPlayer included)
+        /*
+         * the avatarsPath are now ordered like the players List took in the beginning.
+         * while the playersList has now changed, the avatarsPath one did NOT.
+         * it has to change according to the position of the players. We will do that with a function
+         */
+
         ArrayList<String> avatarsPathWithUser = changePositionOfAvatarsPath(avatarsPath, players, playersWithUser);
-        // Players in the order of play (withOUT userPlayer included)
-        ArrayList<Player> enemyPlayers = getPlayersWithoutUser(playersWithUser, userPlayer);
-        System.out.println("enemy: " + enemyPlayers);
-        // AvatarPaths in the order of play (withOUT userPlayer included)
-        ArrayList<String> enemyAvatarPaths =getPlayersWithoutUser(avatarsPathWithUser, user.getAvatar().getAvatarPath());
+
+        ArrayList<Player> enemyPlayers     = getPlayersWithoutUser(playersWithUser, userPlayer);
+
+        ArrayList<String> enemyAvatarPaths = getPlayersWithoutUser(avatarsPathWithUser, user.getAvatar().getAvatarPath());
 
         /**ENEMY GUI WILL BE FOR 2, 3 and 4 players since we will have 1 enemy at the top**/
         if(playersNumber == 2){
@@ -124,7 +118,9 @@ public class GameGUI {
             multipleEnemiesTopGUI = new MultipleEnemiesTopGUI(cardBackPath,topEnemies, topAvatarPaths);
         }
 
+        /**TODO disable players avatar labels if player != table.getPlayingPlayer()**/
         //disableNonPlayingPlayers();
+
 
         /*
         while("game is running"){
@@ -186,10 +182,10 @@ public class GameGUI {
     public LinkedHashMap<Player, String> createPlayerToAvatarMap(User user, int playersNumber){
         // create names and avatarsPath lists
         ArrayList<String> names = Stream.of("Steve Jobs", "James Gosling", "Bill Gates", "Mark Zuckerberg", "Lex Fridman", "Alan Turing", "Kurt Godel", "Linus Torvald", "Terry A. Davis","Ludwig Wittgenstein", "J. R. R. Tolkien","Fedor Dostoevskij", "J.K. Rowling", "George R.R. Martin", "Steven Spielberg", "Stanley Kubrick", "Liam Neeson", "Ada Lovelace", "Donald Knuth", "Kevin Mitnick", "George Hotz", "Elliot Alderson", "Tyrion Lannister" , "Walter White","Ezio Auditore", "Natan Drake", "Spiderman", "Harry Potter", "Ron Weasley","Hermione Granger", "Jordan Peterson", "Karl Marx", "John Nash", "Aaron Swartz", "John Bradshaw", "Andrew Ng", "Friedrich Nietzsche", "Pier Paolo Pasolini", "Elsa Morante", "Alberto Moravia", "Giacomo Leopardi", "Dante Alighieri", "Virgilio", "Lucio Anneo Seneca", "Sigmund Freud", "Carl Jung", "Franz Kafka", "Carmelo Bene", "Rancore", "Caparezza", "Jack Nicholson","Francesco Guccini" ,"Fabrizio De André","Federico Fellini", "Robert De Niro" ,"Jennifer Connelly", "Neo",
-                "Merle Robbin").collect(Collectors.toCollection(ArrayList::new));
+                "Merle Robbin", "Albus Silente", "Magnus Carlsen", "Rubeus Hagrid", "Rino Gaetano").collect(Collectors.toCollection(ArrayList::new));
 
         ArrayList<String> avatarsPath = Stream.of("steve_jobs.jpeg","james_gosling.png" , "bill_gates.jpeg","mark_zuckerberg.jpeg", "lex_fridman.png", "alan_turing.jpeg", "kurt_godel.jpeg", "linus_torvalds.png", "terry_a_davis.jpeg", "ludwig_wittgenstein.jpeg", "j_r_r_tolkien.jpeg", "fedor_dostoevskij.jpeg", "j_k_rowling.jpeg", "george_r_r_martin.jpg", "steven_spielberg.jpeg", "stanley_kubrick.jpeg", "liam_neeson.jpeg", "ada_lovelace.jpeg", "donald_knuth.jpeg", "kevin_mitnick.jpeg", "george_hotz.jpeg", "elliot_alderson.jpeg", "tyrion_lannister.jpeg", "walter_white.png", "ezio_auditore.png", "natan_drake.png", "spiderman.jpeg", "harry_potter.png", "ron_weasley.jpeg", "hermione_granger.jpeg", "jordan_peterson.jpeg", "karl_marx.jpeg", "john nash.jpeg", "aaron_swartz.jpeg", "john bradshaw.jpeg", "andrew_ng.jpeg", "friedrich_nietzsche.jpeg", "pier_paolo_pasolini.jpeg", "elsa_morante.jpeg", "alberto_moravia.jpeg",  "giacomo_leopardi.jpeg", "dante_alighieri.jpeg",  "virgilio.png", "lucio_anneo_seneca.jpeg",  "sigmund_freud.jpeg", "carl_jung.jpeg",  "franz_kafka.jpeg", "carmelo_bene.jpeg",  "rancore.jpeg", "caparezza.jpeg",  "jack-nicholson.jpeg", "francesco_guccini.png",  "fabrizio_de_andre.jpeg", "federico_fellini.jpeg",  "robert_de_niro.jpeg", "jennifer_connelly.png", "neo.jpeg"
-                        , "merle_robbins.jpeg" )
+                        , "merle_robbins.jpeg", "albus_silente.jpeg", "magnus_carlsen.jpeg", "rubeus_hagrid.png", "rino_gaetano.jpeg" )
                 .map(name -> "src/BotAvatars/" + name)
                 .collect(Collectors.toCollection(ArrayList::new));
 
@@ -236,6 +232,12 @@ public class GameGUI {
     public ArrayList<String> changePositionOfAvatarsPath(ArrayList<String> oldAvatarPaths
                                                         , ArrayList<Player> oldPlayers
                                                         , ArrayList<Player> newPlayers ){
+
+        /**
+         * finds the userPlayer, and build an array in this way
+         * getTable.getPlayers = [enemy1, enemy2 , user, enemy3, enemy4] --> returns [user,enemy3,enemy4,enemy1, enemy2]
+         * so the last one goes in the left, while the index 1 goes at his right. All the others go in the top
+         * **/
         /*
         * L1 and L2 are ordered together but...
         * L1old = [a,b,c,d,e,f] -> has changed to -> [b,e,f,c,a,d] = L1new
@@ -548,7 +550,7 @@ public class GameGUI {
 
     public static void main(String[] args) {
         User newUs = new User("AleMilos", 10, "src/Avatars/me.jpg");
-        GameGUI gg = new GameGUI(newUs,10, Difficulty.EASY, "src/cards/yugioh.png");
+        GameGUI gg = new GameGUI(newUs,10, Difficulty.EASY, "src/cardsBack/uno_original.png");
     }
 
 }

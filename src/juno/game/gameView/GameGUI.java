@@ -425,7 +425,7 @@ public class GameGUI {
 
     public static void main(String[] args) {
         User newUs = new User("AleMilos", 10, "src/Images/Avatars/me.jpg");
-        GameGUI gg = new GameGUI(newUs,10, Difficulty.EASY, "src/Images/CardsBack/yugioh.png");
+        GameGUI gg = new GameGUI(newUs,4, Difficulty.EASY, "src/Images/CardsBack/uno_version_1.png");
     }
 
 }

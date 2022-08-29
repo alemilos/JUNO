@@ -16,12 +16,33 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-public class ProfileGUI extends JFrame{
+public class ProfileGUI extends JFrame implements ActionListener{
 
     public ConfirmFrame confirmOrUndoChildFrame;
 
+    private User user;
+
     private JFrame frame;
+
+    private JPanel titlePanel;
+
+    private JPanel centralPanel;
+
+    private JButton goBackBtn;
+
+    private JButton deleteProfile;
+
+    private JButton changeProfileBtn;
+
+    private Font ssPlain16 = new Font("Sans Serif",Font.PLAIN, 16);
+
+    /**
+     * OBSERVER TO CONFIRM FRAME
+      **/
+
     public ProfileGUI(User user){
+        this.user = user;
+
         frame = new JFrame("Profilo");
         frame.setLayout(new BorderLayout());
         frame.setExtendedState(MAXIMIZED_BOTH);
@@ -32,8 +53,6 @@ public class ProfileGUI extends JFrame{
         JLabel title = new JLabel("Profilo");
         title.setForeground(new Color(203, 90, 90));
         title.setFont(new Font("Sans Serif", Font.BOLD, 80));
-        title.setVerticalAlignment(JLabel.CENTER);
-        frame.add(title);
 
         // Avatar IMAGE
         ImageIcon avatarIcon = new ImageIcon(user.getAvatar().getAvatarPath());
@@ -44,21 +63,24 @@ public class ProfileGUI extends JFrame{
         avatarLabel.setIcon(avatarIcon);
         avatarLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
         // INFO Panel
         JPanel infoPanel = new JPanel(new SpringLayout());
 
         /***USERNAME LABEL***/
         JLabel username = new JLabel("Username: ", JLabel.TRAILING);
+        username.setFont(ssPlain16);
         infoPanel.add(username);
         JLabel actualUsername = new JLabel(user.getUsername());
+        actualUsername.setFont(ssPlain16);
 
         username.setLabelFor(actualUsername);
         infoPanel.add(actualUsername);
         /***AGE LABEL***/
         JLabel age = new JLabel("Età: ", JLabel.TRAILING);
+        age.setFont(ssPlain16);
         infoPanel.add(age);
         JLabel actualAge = new JLabel(""+user.getAge());
+        actualAge.setFont(ssPlain16);
 
         age.setLabelFor(actualAge);
         infoPanel.add(actualAge);
@@ -68,8 +90,10 @@ public class ProfileGUI extends JFrame{
 
         for(int i = 0; i < statsLabels.length; i++){
             JLabel label = new JLabel(statsLabels[i], JLabel.TRAILING);
+            label.setFont(ssPlain16);
             infoPanel.add(label);
             JLabel actualLabel = new JLabel();
+            actualLabel.setFont(ssPlain16);
             switch (i){
                 case 0:
                     actualLabel.setText(""+user.getStats().getPlayed());
@@ -96,22 +120,12 @@ public class ProfileGUI extends JFrame{
         Image goBackImage = goBackIcon.getImage();
         Image newGoBackImage = goBackImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         goBackIcon = new ImageIcon(newGoBackImage);
-        JButton goBackBtn = new JButton(goBackIcon);
+        goBackBtn = new JButton(goBackIcon);
         goBackBtn.setFocusPainted(false);
-
-        // goback action
-        goBackBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                MenuGUI menuGUI = new MenuGUI(user);
-                frame.setVisible(false);
-                frame.dispose();
-
-            }
-        });
+        goBackBtn.addActionListener(this);
 
         // deleteButton
-        JButton deleteProfile = new JButton("Cancella Profilo");
+        deleteProfile = new JButton("Cancella Profilo");
         deleteProfile.setForeground(Color.WHITE);
         deleteProfile.setOpaque(true);
         deleteProfile.setBorderPainted(false);
@@ -120,63 +134,39 @@ public class ProfileGUI extends JFrame{
         deleteProfile.setAlignmentX(Component.CENTER_ALIGNMENT);
         deleteProfile.setSize(new Dimension(100,50));
         deleteProfile.setFocusPainted(false);
-
-        deleteProfile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (confirmOrUndoChildFrame == null) {
-                    confirmOrUndoChildFrame = new ConfirmFrame(frame, "ProfileGUI", user, 666, Difficulty.EASY, "");
-                }
-            }
-        });
+        deleteProfile.addActionListener(this);
 
         // logOutButton
-        JButton logOut = new JButton("Cambia Profilo");
-        logOut.setForeground(Color.WHITE);
-        logOut.setOpaque(true);
-        logOut.setBorderPainted(false);
-        logOut.setBackground(new Color(221, 121, 115));
-        logOut.setFont(new Font("Sans Serif", Font.BOLD, 10));
-        logOut.setAlignmentX(Component.CENTER_ALIGNMENT);
-        logOut.setSize(new Dimension(100,50));
-        logOut.setFocusPainted(false);
-        logOut.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                logOut.setFocusPainted(false);
-                StartAppView saw = new StartAppView();
-                frame.dispose();
-            }
-        });
-
+        changeProfileBtn = new JButton("Cambia Profilo");
+        changeProfileBtn.setForeground(Color.WHITE);
+        changeProfileBtn.setOpaque(true);
+        changeProfileBtn.setBorderPainted(false);
+        changeProfileBtn.setBackground(new Color(221, 121, 115));
+        changeProfileBtn.setFont(new Font("Sans Serif", Font.BOLD, 10));
+        changeProfileBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        changeProfileBtn.setSize(new Dimension(100,50));
+        changeProfileBtn.setFocusPainted(false);
+        changeProfileBtn.addActionListener(this);
 
         // Panels
-        JPanel topPanel = new JPanel();
-        topPanel.setPreferredSize(new Dimension(100,120));
-        topPanel.add(title);
+        titlePanel = new JPanel(new GridBagLayout());
+        titlePanel.setPreferredSize(new Dimension(100,160));
+        titlePanel.add(title);
 
-        JScrollPane infoScrollPane = new JScrollPane(infoPanel,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-        infoScrollPane.setForeground(Color.red);
 
         // PANEL for delete and logout
         JPanel deleteAndLogOut = new JPanel(new FlowLayout());
         deleteAndLogOut.add(deleteProfile);
-        deleteAndLogOut.add(logOut);
+        deleteAndLogOut.add(changeProfileBtn);
 
-        JPanel centralPanel = new JPanel();
+        centralPanel = new JPanel();
         centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.Y_AXIS));
         centralPanel.setPreferredSize(new Dimension(100,100));
         centralPanel.add(avatarLabel);
         centralPanel.add(Box.createVerticalStrut(20));
-        centralPanel.add(infoScrollPane);
+        centralPanel.add(infoPanel);
         centralPanel.add(Box.createVerticalStrut(20));
         centralPanel.add(deleteAndLogOut);
-
-
-
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
@@ -184,10 +174,10 @@ public class ProfileGUI extends JFrame{
         bottomPanel.add(goBackBtn, BorderLayout.WEST);
 
         // Adding panels to frame
-        frame.add(topPanel, BorderLayout.NORTH);
-        frame.add(new JPanel(), BorderLayout.WEST);
+        frame.add(titlePanel, BorderLayout.NORTH);
+
         frame.add(centralPanel, BorderLayout.CENTER);
-        frame.add(new JPanel(), BorderLayout.EAST);
+
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setVisible(true);
@@ -216,4 +206,28 @@ public class ProfileGUI extends JFrame{
             ex.printStackTrace();
         }
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == goBackBtn){
+            MenuGUI menuGUI = new MenuGUI(this.user);
+            this.frame.setVisible(false);
+            this.frame.dispose();
+        }
+        else if(e.getSource() == deleteProfile){
+            if (this.confirmOrUndoChildFrame == null) {
+                this.confirmOrUndoChildFrame = new ConfirmFrame(this.frame, "ProfileGUI", user, 666, Difficulty.EASY, "");
+            }
+        }
+        else if(e.getSource() == changeProfileBtn){
+            changeProfileBtn.setFocusPainted(false);
+            StartAppView saw = new StartAppView();
+            this.frame.dispose();
+        }
+    }
+
+    public void update(){
+
+    }
+
 }

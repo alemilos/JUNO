@@ -11,14 +11,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ConfirmFrame extends JFrame{
+public class ConfirmFrame extends JFrame implements ActionListener{
 
-    String result = null;
+    private String result = null;
+
+    private JFrame frame;
+
+    private JButton undoBtn;
+
+    private JButton confirmBtn;
+
+    private ProfileGUI profileGUI;
+
+    private GameSettingsGUI gameSettingsGUI;
 
     public ConfirmFrame(JFrame parentFrame, String parentFrameName, User user, int playersNumber, Difficulty difficulty, String backCardPath){
-        // here go 2 buttons : UNDO and CONFIRM
-        // if confirm --> delete the user
-        JFrame frame = new JFrame();
+        frame = new JFrame();
         frame.setLayout(new BorderLayout());
         frame.setLocationRelativeTo(null);
         frame.setSize(new Dimension(200,120));
@@ -34,38 +42,18 @@ public class ConfirmFrame extends JFrame{
         Image undoImage = undoIcon.getImage();
         Image newUndoImage = undoImage.getScaledInstance(50,50,Image.SCALE_SMOOTH);
         undoIcon = new ImageIcon(newUndoImage);
-        JButton undoBtn = new JButton(undoIcon);
+        undoBtn = new JButton(undoIcon);
         undoBtn.setFocusPainted(false);
-
-        undoBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });
+        undoBtn.addActionListener(this);
 
         // Confirm BTN
         ImageIcon confirmIcon = new ImageIcon("src/Images/MenuIcons/confirmIcon.png");
         Image confirmImage = confirmIcon.getImage();
         Image newConfirmImage = confirmImage.getScaledInstance(50,50,Image.SCALE_SMOOTH);
         confirmIcon = new ImageIcon(newConfirmImage);
-        JButton confirmBtn = new JButton(confirmIcon);
+        confirmBtn = new JButton(confirmIcon);
         confirmBtn.setFocusPainted(false);
-
-        confirmBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                if (parentFrameName.equals("ProfileGUI")) {
-                    ProfileGUI.removeUserFromJSON(user);
-                    StartAppView saw = new StartAppView();
-                    parentFrame.dispose();
-                } else if(parentFrameName.equals("GameSettingsGUI")){
-                    GameGUI gg = new GameGUI(user, playersNumber, difficulty, backCardPath );
-                    parentFrame.dispose();
-                }
-            }
-        });
+        confirmBtn.addActionListener(this);
 
         // adding to frame
         frame.add(confirmLabel, BorderLayout.NORTH);
@@ -74,10 +62,35 @@ public class ConfirmFrame extends JFrame{
 
         frame.setVisible(true);
 
-
     }
 
     public String getResult(){
         return result;
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+
+   /* @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == undoBtn){
+            frame.dispose();
+        }
+        else if(e.getSource() == confirmBtn){
+            frame.dispose();
+            if (parentFrameName.equals("ProfileGUI")) {
+                ProfileGUI.removeUserFromJSON(user);
+                StartAppView saw = new StartAppView();
+                parentFrame.dispose();
+            } else if(parentFrameName.equals("GameSettingsGUI")){
+                GameGUI gg = new GameGUI(user, playersNumber, difficulty, backCardPath );
+                parentFrame.dispose();
+            }
+        }
+    }
+
+    */
 }

@@ -8,28 +8,54 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
-public class ShowAvatars {
+public class ShowAvatars implements ActionListener{
+
+    /** OBSERVABLE **/
 
     private ImageIcon selectedAvatar;
+
+    private ArrayList<String> avatarsPathList = new ArrayList<>();
+
     private String avatarPath;
 
-    public ShowAvatars(){
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+    private JFrame frame;
 
-        JPanel avatarsPanel = new JPanel(new FlowLayout());
-        JPanel bottomPanel = new JPanel(new BorderLayout());
+    private JButton goBackBtn;
+
+    private JButton confirmBtn;
+
+    private JPanel avatarsPanel;
+
+    private JPanel bottomPanel;
+
+    private SetData subscriberFrame;
+
+
+    public ShowAvatars(){
+
+        frame = new JFrame();
+        frame.setLayout(new BorderLayout());
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setResizable(false);
+
+        avatarsPanel = new JPanel(new FlowLayout());
+
+        bottomPanel = new JPanel(new BorderLayout());
+
+
 
         File dir = new File("src/Images/Avatars");
         int numberOfAvatars = 0;
         for (File file: dir.listFiles()){
-            if(!file.isDirectory() && !file.getPath().equals("src/Images/Avatars/.DS_Store")){
+            if(!file.getPath().equals("src/Images/Avatars/.DS_Store")){
                 numberOfAvatars +=1;
                 // Create Images
-                ImageIcon icon = new ImageIcon(file.getPath());
+                String filePath = file.getPath();
+                avatarsPathList.add(filePath);
+                ImageIcon icon = new ImageIcon(filePath);
                 Image image = icon.getImage();
                 Image newImage = image.getScaledInstance(100,100, Image.SCALE_SMOOTH);
                 icon = new ImageIcon(newImage);
@@ -45,58 +71,50 @@ public class ShowAvatars {
                 avatarsPanel.add(button);
             }
         }
-        JScrollPane avatarsScrollPane = new JScrollPane(avatarsPanel,
-                                    JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-                                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        JScrollPane scrollPane = new JScrollPane(avatarsPanel,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 
-        // GO BACK ICON
         ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.png");
         Image goBackImage = goBackIcon.getImage();
         Image newGoBackImage = goBackImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         goBackIcon = new ImageIcon(newGoBackImage);
-        JButton goBackBtn = new JButton(goBackIcon);
+        goBackBtn = new JButton(goBackIcon);
+        goBackBtn.addActionListener(this);
 
-        goBackBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-
-            }
-        });
-
-        // CONFIRM ICON
         ImageIcon confirmIcon = new ImageIcon("src/Images/MenuIcons/confirmIcon.png");
         Image confirmImage = confirmIcon.getImage();
         Image newConfirmImage = confirmImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         confirmIcon = new ImageIcon(newConfirmImage);
-        JButton confirmBtn = new JButton(confirmIcon);
-
-        confirmBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                /**** Add avatar
-                 *  selection to
-                 *  SET DATA***/
-                SetData.addAvatarImage(selectedAvatar, avatarPath);
-                frame.dispose();
-
-            }
-        });
-
-
-
-        int avatarsPanelWidth = 500;
-        int avatarsPanelHeight = 300;
-        avatarsPanel.setSize(avatarsPanelWidth, avatarsPanelHeight);
+        confirmBtn = new JButton(confirmIcon);
+        confirmBtn.addActionListener(this);
 
         bottomPanel.add(goBackBtn, BorderLayout.WEST);
         bottomPanel.add(confirmBtn,BorderLayout.EAST);
 
-        frame.setSize(avatarsPanelWidth, avatarsPanelHeight);
-
-        frame.add(avatarsScrollPane, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.NORTH);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == goBackBtn ){
+            frame.dispose();
+        }
+        else if(e.getSource() == confirmBtn){
+            if (avatarPath == null){
+                subscriberFrame.update(avatarsPathList.get(0));
+            }else{
+                subscriberFrame.update(avatarPath);
+            }
+            frame.dispose();
+        }
+    }
+
+    public void addSubscriber(SetData setDataFrame){
+        subscriberFrame = setDataFrame;
     }
 }

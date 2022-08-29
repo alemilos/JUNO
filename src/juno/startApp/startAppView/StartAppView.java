@@ -16,124 +16,100 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class StartAppView {
+public class StartAppView extends JFrame implements ActionListener{
+
+    private JFrame frame;
+
+    private JPanel titlePanel;
+
+    private JPanel buttonsPanel;
+
+    private JPanel bottomPanel;
+
+    private JButton newGameBtn;
+
+    private JButton exitBtn;
+
+    private JButton continueBtn;
+
+    private User[] users;
 
     public StartAppView(){
-        JFrame frame = new JFrame();
+        frame = new JFrame("JUNO");
         frame.setLayout(new BorderLayout());
-        frame.setSize(600,600);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true); // this makes a fake full screen
+        frame.setResizable(false);
 
-        // Main Panel
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-
-        // title Label
-        JLabel title = new JLabel();
-        title.setText("JUNO");
+        JLabel title = new JLabel("JUNO");
         title.setForeground(new Color(203, 90, 90));
-        title.setFont(new Font("Sans Serif", Font.BOLD, 80));
+        title.setFont(new Font("Sans Serif", Font.BOLD, 140));
         title.setVerticalAlignment(JLabel.CENTER);
 
-        // NewGame Button
-        JButton newGameBtn = new JButton();
-        newGameBtn.setText("Nuova Partita");
+        newGameBtn = new JButton("Nuova Partita");
         newGameBtn.setForeground(Color.WHITE);
         newGameBtn.setOpaque(true);
         newGameBtn.setBorderPainted(false);
         newGameBtn.setBackground(new Color(221, 121, 115));
         newGameBtn.setFont(new Font("Sans Serif", Font.BOLD, 70));
-        newGameBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        newGameBtn.setPreferredSize(new Dimension(100,50));
+        newGameBtn.setPreferredSize(new Dimension(600,100));
+        newGameBtn.addActionListener(this);
 
-        newGameBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SetData setData = new SetData();
-                frame.setVisible(false);
-                frame.dispose();
-            }
-        });
+        users = readFile("src/profili.json");
 
-
-        User[] users = readFile("src/profili.json");
-
-        // ContinueGame Button
-        JButton continueBtn = new JButton();
-        continueBtn.setText("   Continua   ");
+        continueBtn = new JButton("Continua");
         continueBtn.setForeground(Color.WHITE);
         continueBtn.setOpaque(true);
         continueBtn.setBorderPainted(false);
         continueBtn.setBackground(new Color(221, 121, 115));
         continueBtn.setFont(new Font("Sans Serif", Font.BOLD, 70));
-        continueBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        continueBtn.setPreferredSize(new Dimension(100,50));
-        continueBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                /**TODO:
-                 * This should open a list of users.
-                 * When clicked and confirmed, we can
-                 * use it to play the game
-                 * ***/
-                ChooseAccount ca = new ChooseAccount(users);
-                frame.setVisible(false);
-                frame.dispose();
-
-            }
-        });
-
-        // IF JSON USERS IS EMPTY
+        continueBtn.setPreferredSize(new Dimension(600,100));
+        continueBtn.addActionListener(this);
 
         if(users.length < 1) {
             continueBtn.setEnabled(false);
         }
 
-        // exit Button
-        ImageIcon exitIcon = new ImageIcon("src/Images/MenuIcons/exitIcon.png");
+        ImageIcon exitIcon = new ImageIcon("src/Images/MenuIcons/leave_door.png");
         Image exitImage = exitIcon.getImage();
-        Image newExitImage = exitImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
+        Image newExitImage = exitImage.getScaledInstance(100,100, Image.SCALE_SMOOTH);
         exitIcon = new ImageIcon(newExitImage);
-        JButton exitBtn = new JButton(exitIcon);
-        //ExitButton Listener
-        exitBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });
+        exitBtn = new JButton(exitIcon);
+        exitBtn.addActionListener(this);
+        exitBtn.setFocusPainted(false);
 
-        // SubPanelTop
-        JPanel topSubPanel = new JPanel();
-        topSubPanel.setPreferredSize(new Dimension(100,160));
-        topSubPanel.add(title);
-        // SubPanelCentral
-        JPanel centralSubPanel = new JPanel();
-        centralSubPanel.setLayout(new BoxLayout(centralSubPanel, BoxLayout.Y_AXIS));
-        centralSubPanel.setPreferredSize(new Dimension(100,100));
-        centralSubPanel.add(newGameBtn);
-        centralSubPanel.add(Box.createVerticalStrut(20));
-        centralSubPanel.add(continueBtn);
+        titlePanel = new JPanel();
+        titlePanel.setPreferredSize(new Dimension(100,170));
+        titlePanel.add(title);
 
-        // SubPanelBottom
-        JPanel bottomSubPanel = new JPanel();
-        bottomSubPanel.setLayout(new BorderLayout());
-        bottomSubPanel.setPreferredSize(new Dimension(100,60));
-        bottomSubPanel.add(exitBtn, BorderLayout.EAST);
+        JPanel button1Panel = new JPanel(new GridBagLayout());
+        button1Panel.setPreferredSize(new Dimension(200,100));
+        button1Panel.add(newGameBtn);
 
-        mainPanel.add(topSubPanel, BorderLayout.NORTH);
-        mainPanel.add(centralSubPanel, BorderLayout.CENTER);
-        mainPanel.add(bottomSubPanel, BorderLayout.SOUTH);
+        JPanel button2Panel = new JPanel();
+        button2Panel.setPreferredSize(new Dimension(200,200));
+        button2Panel.setAlignmentY(Component.TOP_ALIGNMENT);
+        button2Panel.add(continueBtn);
 
-        frame.add(mainPanel, BorderLayout.CENTER);
+        buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+        buttonsPanel.setPreferredSize(new Dimension(100,100));
+        buttonsPanel.add(button1Panel);
+        buttonsPanel.add(button2Panel);
+
+        bottomPanel = new JPanel(new GridBagLayout());
+        bottomPanel.setPreferredSize(new Dimension(100,150));
+        bottomPanel.add(exitBtn);
+
+        frame.add(titlePanel, BorderLayout.NORTH);
+        frame.add(buttonsPanel, BorderLayout.CENTER);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setVisible(true);
     }
 
     public static void main(String[] args) {
         StartAppView saw = new StartAppView();
-        //readFile("src/profili.json");
     }
 
     public static User[] readFile(String fileAddress){
@@ -152,6 +128,20 @@ public class StartAppView {
         return null;
 
     }
-
-
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == newGameBtn){
+            SetData setData = new SetData();
+            frame.setVisible(false);
+            frame.dispose();
+        }
+        else if(e.getSource() == exitBtn){
+            frame.dispose();
+        }
+        else if(e.getSource() == continueBtn){
+            ChooseAccount ca = new ChooseAccount(users);
+            frame.setVisible(false);
+            frame.dispose();
+        }
+    }
 }

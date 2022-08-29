@@ -14,7 +14,7 @@ import java.nio.file.FileSystem;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-public class SetData {
+public class SetData extends JFrame{
 
     private static ImageIcon avatarChoosedIcon;
     private static JFrame frame;
@@ -25,12 +25,11 @@ public class SetData {
 
     private static String avatarPathStatic;
     public SetData(){
-        this.frame = new JFrame();
-        frame.setSize(600,500);
+        frame = new JFrame();
         frame.setLayout(new BorderLayout());
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true); // this makes a fake full screen
+        frame.setResizable(false);
 
         // Title Label
         JLabel title = new JLabel("<html> Inserisci <br> i tuoi dati </html>");

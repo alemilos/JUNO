@@ -19,12 +19,14 @@ import java.io.Writer;
 public class ProfileGUI extends JFrame{
 
     public ConfirmFrame confirmOrUndoChildFrame;
+
+    private JFrame frame;
     public ProfileGUI(User user){
-        JFrame frame = new JFrame("Profilo");
+        frame = new JFrame("Profilo");
         frame.setLayout(new BorderLayout());
-        frame.setSize(600,500);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setExtendedState(MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setResizable(false);
 
         // Title label
         JLabel title = new JLabel("Profilo");

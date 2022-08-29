@@ -8,15 +8,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MenuGUI {
+public class MenuGUI extends JFrame {
 
+    private JFrame frame;
     public MenuGUI(User user) {
 
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setSize(600,500);
+        frame = new JFrame();
         frame.setLayout(new BorderLayout());
-        frame.setLocationRelativeTo(null);
+        frame.setExtendedState(MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.setResizable(true);
 
         // instances of JPanel
         JPanel topPanel = new JPanel();

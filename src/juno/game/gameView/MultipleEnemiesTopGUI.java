@@ -14,9 +14,13 @@ public class MultipleEnemiesTopGUI {
      * **/
 
     private JPanel containerPanel; // gridbaglayout
+
     private JPanel enemyComponentsContainerPanel; // flowLayout [<- <-]
 
     private int playersNumber;
+
+    private EnemyComponent enemyComponent;
+
     public MultipleEnemiesTopGUI(){
         // this sets everything to default
     }
@@ -34,7 +38,7 @@ public class MultipleEnemiesTopGUI {
         int enemyComponentWidth = (int)(1000/playersNumber); // panel width divided by number of players
 
         for (int i= 0; i < playersNumber; i++){
-            EnemyComponent enemyComponent =
+            enemyComponent =
                     new EnemyComponent(enemyComponentWidth, enemies.get(i), avatarPaths.get(i), cardBackPath);
 
             enemyComponentsContainerPanel.add(enemyComponent.getContainerPanel());
@@ -47,5 +51,9 @@ public class MultipleEnemiesTopGUI {
 
     public JPanel getContainerPanel(){
         return containerPanel;
+    }
+
+    public EnemyComponent getEnemyComponent(){
+        return enemyComponent;
     }
 }

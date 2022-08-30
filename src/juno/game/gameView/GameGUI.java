@@ -30,7 +30,7 @@ public class GameGUI {
 
     private String cardBackPath;
 
-    private JFrame gameFrame;
+    private GameFrame gameFrame;
 
     private SidePanel sidePanel;
 
@@ -47,6 +47,10 @@ public class GameGUI {
     private int playersNumber;
 
     private Player userPlayer;
+
+    private GamePanel gamePanel;
+
+    private JPanel deckContainer;
 
     public GameGUI(User user, int playersNumber, Difficulty difficulty, String cardBackPath){
         this.user = user;
@@ -92,77 +96,36 @@ public class GameGUI {
          *
          * All of this code will go in the constructors of GamePanel
          * **/
+
+        userPanel = new UserPanel(user, userPlayer);
+        Player nextToLeftUser = enemyPlayers.get(enemyPlayers.size()-1);
+        Player nextToRightUser = enemyPlayers.get(0);
+        String nextToRightUserAvatarPath = enemyAvatarPaths.get(0);
+        String nextToLeftUserAvatarPath = enemyAvatarPaths.get(enemyPlayers.size()-1);
+        deckContainer = getCenterDDeckAndGCard(cardBackPath, game.getTable().getGroundCard());
+
+
         if(playersNumber == 2){
-            Player enemy = enemyPlayers.get(0);
-            String enemyAvatarPath = enemyAvatarPaths.get(0);
-            enemyGUI = new OneEnemyGUI(cardBackPath,enemy, enemyAvatarPath, playersNumber);
+            enemyGUI = new OneEnemyGUI(cardBackPath, nextToRightUser, nextToRightUserAvatarPath, playersNumber);
+            gamePanel = new GamePanel(userPanel, enemyGUI, deckContainer);
         }
         else if(playersNumber == 3){
-            Player leftEnemy = enemyPlayers.get(1);
-            String leftAvatarPath = enemyAvatarPaths.get(1);
-            leftEnemyPanel = new LeftEnemyPanel(cardBackPath, leftEnemy , leftAvatarPath);
-            Player topEnemy = enemyPlayers.get(0);
-            String topAvatarPath = enemyAvatarPaths.get(0);
-            enemyGUI = new OneEnemyGUI(cardBackPath, topEnemy, topAvatarPath, playersNumber );
-        }else if (playersNumber == 4){
-            Player leftEnemy = enemyPlayers.get(2);
-            String leftAvatarPath = enemyAvatarPaths.get(2);
-            leftEnemyPanel = new LeftEnemyPanel(cardBackPath, leftEnemy , leftAvatarPath);
-            Player topEnemy = enemyPlayers.get(1);
-            String topAvatarPath = enemyAvatarPaths.get(1);
-            enemyGUI = new OneEnemyGUI(cardBackPath, topEnemy, topAvatarPath, playersNumber );
-            Player rightEnemy = enemyPlayers.get(0);
-            String rightAvatarPath = enemyAvatarPaths.get(0);
-            rightEnemyPanel = new RightEnemyPanel(cardBackPath, rightEnemy, rightAvatarPath);
-        }else if(playersNumber > 4){
-            Player leftEnemy = enemyPlayers.get(enemyPlayers.size()-1);
-            String leftAvatarPath = enemyAvatarPaths.get(enemyPlayers.size()-1);
-            leftEnemyPanel = new LeftEnemyPanel(cardBackPath, leftEnemy , leftAvatarPath);
-            Player rightEnemy = enemyPlayers.get(0);
-            String rightAvatarPath = enemyAvatarPaths.get(0);
-            rightEnemyPanel = new RightEnemyPanel(cardBackPath, rightEnemy, rightAvatarPath);
-            ArrayList<Player> topEnemies = getTopEnemiesArray(enemyPlayers);
-            ArrayList<String> topAvatarPaths = getTopEnemiesArray(enemyAvatarPaths);
-            multipleEnemiesTopGUI = new MultipleEnemiesTopGUI(cardBackPath,topEnemies, topAvatarPaths);
+            System.out.println(enemyPlayers);
+            multipleEnemiesTopGUI = new MultipleEnemiesTopGUI(cardBackPath,enemyPlayers,enemyAvatarPaths);
+            gamePanel = new GamePanel(userPanel, multipleEnemiesTopGUI, deckContainer);
+        }else if (playersNumber > 3) {
+            multipleEnemiesTopGUI = new MultipleEnemiesTopGUI(cardBackPath, getTopEnemiesArray(enemyPlayers), getTopEnemiesArray(enemyAvatarPaths));
+            leftEnemyPanel = new LeftEnemyPanel(cardBackPath, nextToLeftUser, nextToLeftUserAvatarPath);
+            rightEnemyPanel = new RightEnemyPanel(cardBackPath, nextToRightUser, nextToRightUserAvatarPath);
+            gamePanel = new GamePanel(userPanel, multipleEnemiesTopGUI, leftEnemyPanel, rightEnemyPanel, deckContainer);
         }
 
         /**TODO disable players avatar labels if player != table.getPlayingPlayer()**/
         //disableNonPlayingPlayers();
 
-
-        /*
-        while("game is running"){
-            "run a function which needs to wait until user INPUT is took"
-                    "than repeat this cicle until game is not OVER"
-        }
-         */
-
-
-        /**START TO REFACTOR
-         *
-         * Make a JFRAME extend in a class for this
-         * */
-        gameFrame = new JFrame();
-        gameFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        gameFrame.setUndecorated(true);
-        userPanel = new UserPanel(user, userPlayer);
-        JPanel middleConta = getCenterDDeckAndGCard(cardBackPath, game.getTable().getGroundCard());
-        JPanel gamePanel = getGamePanel(userPanel,
-                                        middleConta,
-                                        enemyGUI,
-                                        leftEnemyPanel,
-                                        rightEnemyPanel,
-                                        multipleEnemiesTopGUI);
-        sidePanel = new SidePanel(user, gameFrame);
-        gameFrame.add(gamePanel, BorderLayout.CENTER);
-        gameFrame.add(sidePanel.getSidePanel(), BorderLayout.EAST);
-
-
-
-        //frame.add(sidePanel, BorderLayout.EAST);
-        gameFrame.setVisible(true);
-        /**END TO REFACTOR**/
-
+        sidePanel = new SidePanel(user);
+        gameFrame = new GameFrame(gamePanel, sidePanel);
+        sidePanel.setGameFrame(gameFrame.getGameFrame());
     }
 
     /*
@@ -273,66 +236,6 @@ public class GameGUI {
     }
 
 
-    public JPanel getGamePanel(UserPanel userPanel,
-                               JPanel middleContainer, OneEnemyGUI enemyGUI,
-                               LeftEnemyPanel leftEnemyPanel,
-                               RightEnemyPanel rightEnemyPanel,
-                               MultipleEnemiesTopGUI multipleEnemiesTopGUI){
-
-        JPanel mainPanel = new JPanel(new BorderLayout());
-
-        mainPanel.setSize(1000,800);
-
-        JPanel panel1 = new JPanel(new BorderLayout());
-        panel1.setSize(1000,280);
-        if (playersNumber <= 4) {
-            panel1.add(enemyGUI.getInfoPanel(), BorderLayout.WEST);
-            JPanel innerPanel1 = new JPanel(new GridBagLayout()); // to center everything in case of 2 nplayers
-            innerPanel1.add(enemyGUI.getCardsContainerPanel());
-            panel1.add(innerPanel1, BorderLayout.CENTER);
-            panel1.add(Box.createHorizontalStrut(150), BorderLayout.EAST);
-        }
-        if (playersNumber > 4){
-            panel1.add(multipleEnemiesTopGUI.getContainerPanel(), BorderLayout.CENTER);
-        }
-
-        JPanel panel2 = new JPanel(new BorderLayout());
-        panel2.setPreferredSize(new Dimension(350, 260));
-        if (this.playersNumber > 2) {
-            panel2.add(leftEnemyPanel.getLeftInfoPanel(), BorderLayout.WEST);
-            panel2.add(leftEnemyPanel.getPanelForLayPane(), BorderLayout.CENTER);
-        }
-
-        JPanel panel3 = new JPanel(new BorderLayout());
-        panel3.setBackground(Color.green);
-        panel3.setSize(new Dimension(300,260));
-        panel3.add(middleContainer);
-
-        JPanel panel4 = new JPanel(new BorderLayout());
-        panel4.setPreferredSize(new Dimension(350,260));
-        if (this.playersNumber > 3){
-            panel4.add(rightEnemyPanel.getPanelForLayPane(),BorderLayout.CENTER);
-            panel4.add(rightEnemyPanel.getRightInfoPanel(),BorderLayout.EAST);
-        }
-
-        JPanel panel5 = new JPanel(new BorderLayout());
-        panel5.setSize(1000,280);
-        panel5.add(userPanel.getUserPanelContainer());
-        /*panel5.add(infoPanel, BorderLayout.WEST);
-        panel5.add(cardsPanel, BorderLayout.CENTER);
-        panel5.add(unoPanel, BorderLayout.EAST);
-
-
-         */
-
-        mainPanel.add(panel1, BorderLayout.NORTH);
-        mainPanel.add(panel2, BorderLayout.WEST);
-        mainPanel.add(panel3, BorderLayout.CENTER);
-        mainPanel.add(panel4, BorderLayout.EAST);
-        mainPanel.add(panel5, BorderLayout.SOUTH);
-
-        return mainPanel;
-    }
 
     public JPanel getCenterDDeckAndGCard(String backCardPath, Card groundCard){
 
@@ -433,7 +336,7 @@ public class GameGUI {
 
     public static void main(String[] args) {
         User newUs = new User("AleMilos", 10, "src/Images/Avatars/me.jpg");
-        GameGUI gg = new GameGUI(newUs,2, Difficulty.EASY, "src/Images/CardsBack/yugioh.png");
+        GameGUI gg = new GameGUI(newUs,10, Difficulty.EASY, "src/Images/CardsBack/yugioh.png");
     }
 
 }

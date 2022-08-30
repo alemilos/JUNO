@@ -74,11 +74,11 @@ public class MenuGUI extends JFrame implements ActionListener{
         exitBtn.addActionListener(this);
 
         JPanel button1Panel = new JPanel(new GridBagLayout());
-        button1Panel.setPreferredSize(new Dimension(200,100));
+        button1Panel.setPreferredSize(new Dimension(200,200));
         button1Panel.add(playBtn);
 
         JPanel button2Panel = new JPanel();
-        button2Panel.setPreferredSize(new Dimension(200,600));
+        button2Panel.setPreferredSize(new Dimension(200,500));
         button2Panel.setAlignmentY(Component.TOP_ALIGNMENT);
         button2Panel.add(exitBtn);
 

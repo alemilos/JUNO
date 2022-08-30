@@ -93,6 +93,14 @@ public class EnemyComponent extends JPanel {
         return containerPanel;
     }
 
+    public JPanel getInfoPanel(){
+        return infoPanel;
+    }
+
+    public JLayeredPane getCardsPane(){
+        return cardsPane;
+    }
+
     public void setAvatarLabel(boolean enabled){
         avatarLabel.setEnabled(enabled);
     }

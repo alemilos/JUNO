@@ -168,7 +168,7 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
 
         ImageIcon defaultCardIcon = new ImageIcon(cardBackPath);
         Image cardImage = defaultCardIcon.getImage();
-        Image newCardImage = cardImage.getScaledInstance(200,400, Image.SCALE_SMOOTH);
+        Image newCardImage = cardImage.getScaledInstance(200,360, Image.SCALE_SMOOTH);
         defaultCardIcon = new ImageIcon(newCardImage);
         cardBackImageLabel = new JLabel(defaultCardIcon);
 
@@ -185,7 +185,6 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
         downCenterPanel.add(cardTitlePanel, BorderLayout.NORTH);
         downCenterPanel.add(cardBackImageLabel, BorderLayout.CENTER);
         downCenterPanel.add(startBtn, BorderLayout.SOUTH);
-
         // down-right
 
         ImageIcon settingsIcon = new ImageIcon("src/Images/MenuIcons/settingsIcon.png");
@@ -283,7 +282,7 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
     public void update(String cardBackPath){
         ImageIcon icon = new ImageIcon(cardBackPath);
         Image image = icon.getImage();
-        Image newImage = image.getScaledInstance(200,400, Image.SCALE_SMOOTH);
+        Image newImage = image.getScaledInstance(200,360, Image.SCALE_SMOOTH);
         icon = new ImageIcon(newImage);
 
         this.cardBackPath = cardBackPath;

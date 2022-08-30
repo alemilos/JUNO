@@ -21,8 +21,7 @@ public class SidePanel extends JPanel implements ActionListener {
 
     private User user;
 
-    public SidePanel(User user, JFrame gameFrame){
-        this.gameFrame = gameFrame;
+    public SidePanel(User user){
         this.user = user;
 
         sidePanel = new JPanel(new BorderLayout());
@@ -84,6 +83,10 @@ public class SidePanel extends JPanel implements ActionListener {
 
     public void updateJSON(){
         System.out.println("Implement a function that changes JSON element adding 1 lose to him");
+    }
+
+    public void setGameFrame(JFrame gameFrame){
+        this.gameFrame = gameFrame;
     }
 
 }

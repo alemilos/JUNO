@@ -25,7 +25,8 @@ public class ConfirmFrame extends JFrame implements ActionListener{
 
     private GameSettingsGUI gameSettingsGUI;
 
-    public ConfirmFrame(JFrame parentFrame, String parentFrameName, User user, int playersNumber, Difficulty difficulty, String backCardPath){
+    // int playersNumber, Difficulty difficulty, String backCardPath are in the constructor for gamesettingsgui
+    public ConfirmFrame(){
         frame = new JFrame();
         frame.setLayout(new BorderLayout());
         frame.setLocationRelativeTo(null);
@@ -68,29 +69,34 @@ public class ConfirmFrame extends JFrame implements ActionListener{
         return result;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
+    public void addProfileGUI(ProfileGUI profileGUI){
+        this.profileGUI = profileGUI;
     }
 
+    public void addGameSettingsGUI(GameSettingsGUI gameSettingsGUI){
+        this.gameSettingsGUI = gameSettingsGUI;
+    }
 
-   /* @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == undoBtn){
-            frame.dispose();
-        }
-        else if(e.getSource() == confirmBtn){
-            frame.dispose();
-            if (parentFrameName.equals("ProfileGUI")) {
-                ProfileGUI.removeUserFromJSON(user);
-                StartAppView saw = new StartAppView();
-                parentFrame.dispose();
-            } else if(parentFrameName.equals("GameSettingsGUI")){
-                GameGUI gg = new GameGUI(user, playersNumber, difficulty, backCardPath );
-                parentFrame.dispose();
+        if (e.getSource() == confirmBtn){
+            if(profileGUI != null){
+                profileGUI.removeUserFromJSON();
+                profileGUI.setOpenedConfirmFrame(false);
+                profileGUI.closeFrame();
             }
+            else if(gameSettingsGUI != null){
+                GameGUI gameGUI = new GameGUI(gameSettingsGUI.getUser(), gameSettingsGUI.getPlayersNumber(), gameSettingsGUI.getDifficulty(), gameSettingsGUI.getCardBackPath());
+                gameSettingsGUI.closeFrame();
+            }
+            frame.dispose();
+        }
+        else if(e.getSource() == undoBtn){
+            if(profileGUI != null){
+                profileGUI.setOpenedConfirmFrame(false);
+            }else if(gameSettingsGUI != null){
+                gameSettingsGUI.setOpenedConfirmFrame(false);
+            }
+            frame.dispose();
         }
     }
-
-    */
 }

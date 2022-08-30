@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ShowAvatars implements ActionListener{
+public class ShowAvatars extends  JFrame implements ActionListener{
 
     /** OBSERVABLE **/
 
@@ -22,13 +22,15 @@ public class ShowAvatars implements ActionListener{
 
     private JFrame frame;
 
-    private JButton goBackBtn;
-
-    private JButton confirmBtn;
+    private JPanel titlePanel;
 
     private JPanel avatarsPanel;
 
     private JPanel bottomPanel;
+
+    private JButton goBackBtn;
+
+    private JButton confirmBtn;
 
     private SetData subscriberFrame;
 
@@ -37,9 +39,18 @@ public class ShowAvatars implements ActionListener{
 
         frame = new JFrame();
         frame.setLayout(new BorderLayout());
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-        frame.setUndecorated(true);
+        frame.setSize(800,400);
+        frame.setLocationRelativeTo(null);
         frame.setResizable(false);
+
+        titlePanel = new JPanel(new GridBagLayout());
+        titlePanel.setPreferredSize(new Dimension(0,120));
+
+        JLabel title = new JLabel("Scegli un'avatar");
+        title.setForeground(new Color(203, 90, 90));
+        title.setFont(new Font("Sans Serif", Font.BOLD, 80));
+
+        titlePanel.add(title);
 
         avatarsPanel = new JPanel(new FlowLayout());
 
@@ -74,7 +85,7 @@ public class ShowAvatars implements ActionListener{
 
         JScrollPane scrollPane = new JScrollPane(avatarsPanel,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 
         ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.png");
@@ -94,7 +105,8 @@ public class ShowAvatars implements ActionListener{
         bottomPanel.add(goBackBtn, BorderLayout.WEST);
         bottomPanel.add(confirmBtn,BorderLayout.EAST);
 
-        frame.add(scrollPane, BorderLayout.NORTH);
+        frame.add(titlePanel, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }

@@ -24,6 +24,12 @@ public class GameGUI {
 
     private Game game;
 
+    private User user;
+
+    private Difficulty difficulty;
+
+    private String cardBackPath;
+
     private JFrame gameFrame;
 
     private SidePanel sidePanel;
@@ -43,8 +49,10 @@ public class GameGUI {
     private Player userPlayer;
 
     public GameGUI(User user, int playersNumber, Difficulty difficulty, String cardBackPath){
-
+        this.user = user;
         this.playersNumber = playersNumber;
+        this.difficulty = difficulty;
+        this.cardBackPath = cardBackPath;
 
         LinkedHashMap<Player, String> playerToAvatarPath = createPlayerToAvatarMap(user, playersNumber);
         ArrayList<Player> players = new ArrayList<>(playerToAvatarPath.keySet());
@@ -425,7 +433,7 @@ public class GameGUI {
 
     public static void main(String[] args) {
         User newUs = new User("AleMilos", 10, "src/Images/Avatars/me.jpg");
-        GameGUI gg = new GameGUI(newUs,4, Difficulty.EASY, "src/Images/CardsBack/uno_version_1.png");
+        GameGUI gg = new GameGUI(newUs,2, Difficulty.EASY, "src/Images/CardsBack/yugioh.png");
     }
 
 }

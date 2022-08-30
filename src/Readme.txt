@@ -2,11 +2,7 @@ DELETE THIS AFTER PROGRAM IS DONE
 
 TODOS...
 
-GENERAL:
-- make an Images folder and put every folder containing images there
-
 MENU:
-- Find a way to open frames with the same W and H of the parent frame (IFF the parent get disposed)
 - Strip the username in text-field so that "alessandro".equals("    alessandro  ")
 - Level progress bar with JProgressBar to put in the Menu GUI and also in the Profile
 - Have an enum with names of each frame. This will allow to work without using getClass()
@@ -16,7 +12,6 @@ thing I did with the avatar image.
 
 
 GAME:
-- Look at rules : if wild cards land on the ground card as first cards, look what to do.
 - Make fake screens for loading etc..(pregame needs it)
 - NOT playing players will have avatar Image NOT enabled, While when they are playing their avatar will be ENABLED
 so will show a color. Maybe we will have some effect on this, like slowly increasing his Height and Width

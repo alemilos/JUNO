@@ -18,7 +18,7 @@ import java.io.Writer;
 
 public class ProfileGUI extends JFrame implements ActionListener{
 
-    public ConfirmFrame confirmOrUndoChildFrame;
+    private boolean openedConfirmFrame;
 
     private User user;
 
@@ -183,7 +183,7 @@ public class ProfileGUI extends JFrame implements ActionListener{
         frame.setVisible(true);
     }
 
-    public static void removeUserFromJSON(User user) {
+    public void removeUserFromJSON() {
         /*
         * Creates a new array that removes the user if the json string of user equals
         * one of the old users in the json file.
@@ -205,29 +205,35 @@ public class ProfileGUI extends JFrame implements ActionListener{
         }catch(IOException ex){
             ex.printStackTrace();
         }
+
+        StartAppView saw = new StartAppView();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == goBackBtn){
             MenuGUI menuGUI = new MenuGUI(this.user);
-            this.frame.setVisible(false);
             this.frame.dispose();
         }
         else if(e.getSource() == deleteProfile){
-            if (this.confirmOrUndoChildFrame == null) {
-                this.confirmOrUndoChildFrame = new ConfirmFrame(this.frame, "ProfileGUI", user, 666, Difficulty.EASY, "");
+            if (!openedConfirmFrame){
+                setOpenedConfirmFrame(true);
+                ConfirmFrame confirmFrame = new ConfirmFrame();
+                confirmFrame.addProfileGUI(this);
             }
         }
         else if(e.getSource() == changeProfileBtn){
-            changeProfileBtn.setFocusPainted(false);
             StartAppView saw = new StartAppView();
             this.frame.dispose();
         }
     }
 
-    public void update(){
+    public void setOpenedConfirmFrame(boolean isOpened){
+        this.openedConfirmFrame = isOpened;
+    }
 
+    public void closeFrame(){
+        this.frame.dispose();
     }
 
 }

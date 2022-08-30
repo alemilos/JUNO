@@ -6,6 +6,7 @@ import juno.menu.menuModel.User;
 import juno.menu.menuView.ProfileGUI;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +23,7 @@ public class StartAppView extends JFrame implements ActionListener{
 
     private JPanel titlePanel;
 
-    private JPanel buttonsPanel;
+    private JPanel centralPanel;
 
     private JPanel bottomPanel;
 
@@ -49,10 +50,10 @@ public class StartAppView extends JFrame implements ActionListener{
         newGameBtn = new JButton("Nuova Partita");
         newGameBtn.setForeground(Color.WHITE);
         newGameBtn.setOpaque(true);
-        newGameBtn.setBorderPainted(false);
         newGameBtn.setBackground(new Color(221, 121, 115));
         newGameBtn.setFont(new Font("Sans Serif", Font.BOLD, 70));
         newGameBtn.setPreferredSize(new Dimension(600,100));
+        newGameBtn.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
         newGameBtn.addActionListener(this);
 
         users = readFile("src/profili.json");
@@ -60,10 +61,10 @@ public class StartAppView extends JFrame implements ActionListener{
         continueBtn = new JButton("Continua");
         continueBtn.setForeground(Color.WHITE);
         continueBtn.setOpaque(true);
-        continueBtn.setBorderPainted(false);
         continueBtn.setBackground(new Color(221, 121, 115));
         continueBtn.setFont(new Font("Sans Serif", Font.BOLD, 70));
         continueBtn.setPreferredSize(new Dimension(600,100));
+        continueBtn.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
         continueBtn.addActionListener(this);
 
         if(users.length < 1) {
@@ -87,22 +88,22 @@ public class StartAppView extends JFrame implements ActionListener{
         button1Panel.add(newGameBtn);
 
         JPanel button2Panel = new JPanel();
-        button2Panel.setPreferredSize(new Dimension(200,200));
+        button2Panel.setPreferredSize(new Dimension(200,500));
         button2Panel.setAlignmentY(Component.TOP_ALIGNMENT);
         button2Panel.add(continueBtn);
 
-        buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
-        buttonsPanel.setPreferredSize(new Dimension(100,100));
-        buttonsPanel.add(button1Panel);
-        buttonsPanel.add(button2Panel);
+        centralPanel = new JPanel();
+        centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.Y_AXIS));
+        centralPanel.setPreferredSize(new Dimension(100,100));
+        centralPanel.add(button1Panel);
+        centralPanel.add(button2Panel);
 
         bottomPanel = new JPanel(new GridBagLayout());
         bottomPanel.setPreferredSize(new Dimension(100,150));
         bottomPanel.add(exitBtn);
 
         frame.add(titlePanel, BorderLayout.NORTH);
-        frame.add(buttonsPanel, BorderLayout.CENTER);
+        frame.add(centralPanel, BorderLayout.CENTER);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setVisible(true);

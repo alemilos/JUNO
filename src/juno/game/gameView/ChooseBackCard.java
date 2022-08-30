@@ -1,90 +1,125 @@
 package juno.game.gameView;
 
-import juno.startApp.startAppView.SetData;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
-public class ChooseBackCard extends JFrame implements ActionListener{
+public class ChooseBackCard extends JFrame implements ActionListener {
+    /**
+     * OBSERVABLE
+     **/
+
+    private ImageIcon selectedCardBack;
+
+    private ArrayList<String> cardsBackList = new ArrayList<>();
+
+    private String cardBackPath;
 
     private JFrame frame;
 
-    private JPanel cardsPanel;
+    private JPanel titlePanel;
+
+    private JPanel cardsBackPanel;
+
     private JPanel bottomPanel;
 
-    private ImageIcon selectedCardBack;
-    private String cardBackPath;
-
-    private JButton cardButton;
-
     private JButton goBackBtn;
+
     private JButton confirmBtn;
 
+    private GameSettingsGUI subscriberFrame;
 
-    public ChooseBackCard(){
+
+    public ChooseBackCard() {
+
         frame = new JFrame();
-        frame.setSize(600, 300);
+        frame.setLayout(new BorderLayout());
+        frame.setSize(800, 450);
         frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
 
-        cardsPanel = new JPanel(new FlowLayout());
+        titlePanel = new JPanel(new GridBagLayout());
+        titlePanel.setPreferredSize(new Dimension(0, 120));
+
+        JLabel title = new JLabel("Scegli il retro delle carte");
+        title.setForeground(new Color(203, 90, 90));
+        title.setFont(new Font("Sans Serif", Font.BOLD, 80));
+
+        titlePanel.add(title);
+
+        cardsBackPanel = new JPanel(new FlowLayout());
+
         bottomPanel = new JPanel(new BorderLayout());
 
-        JScrollPane avatarsScrollPane = new JScrollPane(cardsPanel,
-                JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         File dir = new File("src/Images/CardsBack");
-        int numberOfCardsBack = 0;
-        for (File file: dir.listFiles()){
-            if(!file.isDirectory() && !file.getPath().equals("src/Images/Avatars/.DS_Store")){
-                numberOfCardsBack +=1;
+        for (File file : dir.listFiles()) {
+            if (!file.getPath().equals("src/Images/CardsBack/.DS_Store")) {
                 // Create Images
-                ImageIcon icon = new ImageIcon(file.getPath());
+                String filePath = file.getPath();
+                cardsBackList.add(filePath);
+                ImageIcon icon = new ImageIcon(filePath);
                 Image image = icon.getImage();
-                Image newImage = image.getScaledInstance(75,120, Image.SCALE_SMOOTH);
+                Image newImage = image.getScaledInstance(100, 160, Image.SCALE_SMOOTH);
                 icon = new ImageIcon(newImage);
-                cardButton = new JButton(icon);
-                cardButton.addActionListener(new ActionListener() {
+                JButton button = new JButton(icon);
+                button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        selectedCardBack = (ImageIcon) cardButton.getIcon();
+                        selectedCardBack = (ImageIcon) button.getIcon();
                         cardBackPath = file.getPath();
                     }
                 });
 
-                cardsPanel.add(cardButton);
+                cardsBackPanel.add(button);
             }
         }
 
-        ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.png");
+        JScrollPane scrollPane = new JScrollPane(cardsBackPanel,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+
+        ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.jpeg");
         Image goBackImage = goBackIcon.getImage();
-        Image newGoBackImage = goBackImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
+        Image newGoBackImage = goBackImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         goBackIcon = new ImageIcon(newGoBackImage);
         goBackBtn = new JButton(goBackIcon);
         goBackBtn.addActionListener(this);
 
         ImageIcon confirmIcon = new ImageIcon("src/Images/MenuIcons/confirmIcon.png");
         Image confirmImage = confirmIcon.getImage();
-        Image newConfirmImage = confirmImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
+        Image newConfirmImage = confirmImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         confirmIcon = new ImageIcon(newConfirmImage);
         confirmBtn = new JButton(confirmIcon);
         confirmBtn.addActionListener(this);
 
+        bottomPanel.add(goBackBtn, BorderLayout.WEST);
+        bottomPanel.add(confirmBtn, BorderLayout.EAST);
+
+        frame.add(titlePanel, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == goBackBtn){
+        if (e.getSource() == goBackBtn) {
+            frame.dispose();
+        } else if (e.getSource() == confirmBtn) {
+            if (cardBackPath != null){
+                subscriberFrame.update(cardBackPath);
+            }
             frame.dispose();
         }
-        else if(e.getSource() == confirmBtn){
-            if(cardBackPath != null){
-                GameSettingsGUI.setCardBackPath(cardBackPath);
-                frame.dispose();
-            }
-        }
+    }
+
+    public void addSubscriber(GameSettingsGUI gameSettingsGUI) {
+        this.subscriberFrame = gameSettingsGUI;
     }
 }

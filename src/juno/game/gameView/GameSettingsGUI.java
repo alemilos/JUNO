@@ -15,30 +15,40 @@ import java.util.Random;
 public class GameSettingsGUI extends JFrame implements ActionListener{
 
     private User user;
+
     private int playersNumber = 2;
 
     private Difficulty difficulty;
 
-    private String cardBackPath = "src/Images/Cards/uno_version_1.png";
+    private String cardBackPath = "src/Images/CardsBack/uno_version_1.png";
 
-    private JFrame mainFrame;
+    private JLabel cardBackImageLabel;
+
+    private JFrame frame;
 
     private JComboBox choosePlayerNumberComboBox;
 
     private JButton changeCardBtn;
+
     private JButton goBackBtn;
+
     private JButton startBtn;
+
     private JButton easyBtn;
+
     private JButton hardBtn;
+
     private JButton randomBtn;
+
+    private boolean openedConfirmFrame;
+
     public GameSettingsGUI(User user){
         this.user = user;
 
-        // FRAME
-        mainFrame = new JFrame();
-        mainFrame.setLayout(new GridLayout(2, 3));
-        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        mainFrame.setUndecorated(true);
+        frame = new JFrame();
+        frame.setLayout(new GridLayout(2, 3));
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
 
         /***PANELS***/
         // up-left
@@ -47,7 +57,7 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
         JPanel upLeftTOPPanel = new JPanel();
         upLeftTOPPanel.setLayout(new BoxLayout(upLeftTOPPanel, BoxLayout.Y_AXIS));
 
-        JLabel stylesLabel = new JLabel("Stili");
+        JLabel stylesLabel = new JLabel("Stile");
         stylesLabel = addStylesToLabel(stylesLabel);
         stylesLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -55,7 +65,7 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
         stylesPanel.setLayout(new BoxLayout(stylesPanel, BoxLayout.Y_AXIS));
         changeCardBtn = new JButton(" Retro Carte ");
         changeCardBtn = addStyleToButton(changeCardBtn);
-
+        changeCardBtn.addActionListener(this);
 
         stylesPanel.add(Box.createVerticalStrut(40));
         stylesPanel.add(changeCardBtn);
@@ -119,9 +129,11 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
 
         easyBtn = new JButton("  Facile  ");
         easyBtn = addStyleToButton(easyBtn);
+        easyBtn.addActionListener(this);
 
         hardBtn = new JButton("Difficile");
         hardBtn = addStyleToButton(hardBtn);
+        hardBtn.addActionListener(this);
 
         difficultyPanel.add(Box.createVerticalStrut(40));
         difficultyPanel.add(easyBtn);
@@ -132,7 +144,7 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
         upRightPanel.add(difficultyPanel, BorderLayout.CENTER);
 
         // down-left
-        ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.png");
+        ImageIcon goBackIcon = new ImageIcon("src/Images/MenuIcons/gobackIcon.jpeg");
         Image goBackImage = goBackIcon.getImage();
         Image newGoBackImage = goBackImage.getScaledInstance(50,50, Image.SCALE_SMOOTH);
         goBackIcon = new ImageIcon(newGoBackImage);
@@ -142,6 +154,7 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
         goBackBtn.setVerticalAlignment(JButton.BOTTOM);
         goBackBtn.setHorizontalAlignment(JButton.LEFT);
         goBackBtn.setSize(50,50);
+        goBackBtn.addActionListener(this);
 
         JPanel downLeftInnerBottomPanel = new JPanel(new BorderLayout());
         downLeftInnerBottomPanel.setSize(100, 60);
@@ -153,13 +166,24 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
         // down-center
         JPanel downCenterPanel = new JPanel(new BorderLayout());
 
-        JLabel hereGoesTheImage = new JLabel("image goes here");
-        hereGoesTheImage = addStylesToLabel(hereGoesTheImage);
+        ImageIcon defaultCardIcon = new ImageIcon(cardBackPath);
+        Image cardImage = defaultCardIcon.getImage();
+        Image newCardImage = cardImage.getScaledInstance(200,400, Image.SCALE_SMOOTH);
+        defaultCardIcon = new ImageIcon(newCardImage);
+        cardBackImageLabel = new JLabel(defaultCardIcon);
 
         startBtn = new JButton("Inizia");
         startBtn = addStyleToButton(startBtn);
+        startBtn.addActionListener(this);
 
-        downCenterPanel.add(hereGoesTheImage, BorderLayout.NORTH);
+        JPanel cardTitlePanel = new JPanel(new GridBagLayout());
+        JLabel choosedStyleLabel = new JLabel("Stile Scelto");
+        choosedStyleLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
+        choosedStyleLabel.setForeground(new Color(221, 121, 115));
+        cardTitlePanel.add(choosedStyleLabel);
+
+        downCenterPanel.add(cardTitlePanel, BorderLayout.NORTH);
+        downCenterPanel.add(cardBackImageLabel, BorderLayout.CENTER);
         downCenterPanel.add(startBtn, BorderLayout.SOUTH);
 
         // down-right
@@ -179,15 +203,14 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
 
         // adding to main frame
 
-        mainFrame.add(upLeftPanel);
-        mainFrame.add(upCenterPanel);
-        mainFrame.add(upRightPanel);
-        mainFrame.add(downLeftPanel);
-        mainFrame.add(downCenterPanel);
-        mainFrame.add(downRightPanel);
+        frame.add(upLeftPanel);
+        frame.add(upCenterPanel);
+        frame.add(upRightPanel);
+        frame.add(downLeftPanel);
+        frame.add(downCenterPanel);
+        frame.add(downRightPanel);
 
-        mainFrame.setVisible(true);
-
+        frame.setVisible(true);
     }
 
     @Override
@@ -200,7 +223,8 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
             playersNumber = randIndex + 2;
             randomBtn.setFocusPainted(true);
         } else if (source == changeCardBtn) {
-            System.out.println("Open chooseBackCard.java");
+            ChooseBackCard chooseBackCard = new ChooseBackCard();
+            chooseBackCard.addSubscriber(this);
         } else if (source == easyBtn) {
             easyBtn.setBackground(new Color(119, 198, 110));
             difficulty = Difficulty.EASY;
@@ -211,19 +235,25 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
             easyBtn.setBackground(new Color(221, 121, 115));
         } else if (source == goBackBtn) {
             MenuGUI menu = new MenuGUI(user);
-            mainFrame.dispose();
+            frame.dispose();
         } else if (source == startBtn) {
             playersNumber = choosePlayerNumberComboBox.getSelectedIndex() + 2; // +2 perché la combobox è indicizzata da 0 e io ho valori [2,10]
             boolean isDifficulty = difficulty != null ? true : false;
-            if (isDifficulty) {
-                ConfirmFrame cf = new ConfirmFrame(mainFrame,
-                        "GameSettingsGUI",
-                        user,
-                        playersNumber,
-                        difficulty,
-                        cardBackPath);
+            if (!openedConfirmFrame) {
+                if(isDifficulty){
+                    setOpenedConfirmFrame(true);
+                    ConfirmFrame confirmFrame = new ConfirmFrame();
+                    confirmFrame.addGameSettingsGUI(this);
+                }
+                else{
+                    System.out.println("add a difficulty");
+                }
             }
         }
+    }
+
+    public void setOpenedConfirmFrame(boolean isOpened){
+        this.openedConfirmFrame = isOpened;
     }
 
     public JLabel addStylesToLabel(JLabel label){
@@ -248,6 +278,36 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
 
     public static String setCardBackPath(String cardBackPath){
         return cardBackPath;
+    }
+
+    public void update(String cardBackPath){
+        ImageIcon icon = new ImageIcon(cardBackPath);
+        Image image = icon.getImage();
+        Image newImage = image.getScaledInstance(200,400, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(newImage);
+
+        this.cardBackPath = cardBackPath;
+        this.cardBackImageLabel.setIcon(icon);
+    }
+
+    public User getUser(){
+        return user;
+    }
+
+    public int getPlayersNumber(){
+        return playersNumber;
+    }
+
+    public Difficulty getDifficulty(){
+        return difficulty;
+    }
+
+    public String getCardBackPath(){
+        return cardBackPath;
+    }
+
+    public void closeFrame(){
+        this.frame.dispose();
     }
 
 }

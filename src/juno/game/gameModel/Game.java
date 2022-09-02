@@ -64,17 +64,8 @@ public class Game {
     }
 
 
-    public void playRound(Player player){
-        // here goes the check for the WILD DRAW FOUR CARD -> playable iff no classical card in hand matches the color with the ground card.
-        if (player.isBot()){
-            playRoundAI(player);
-        }
-        else{
-            playRoundUser(player);
-        }
-    }
-
     public void playRoundAI(Player player){
+        /*
         if (table.getGroundCard() instanceof WildCard){
             // If the wild card is not active, AI will choose randomly a color
             WildCard groundCard = (WildCard)table.getGroundCard();
@@ -88,6 +79,7 @@ public class Game {
                 groundCard.setActive(true);
             }
         }
+         */
         if (usableCards(player.getHand()).size() > 0){
 
         }

@@ -120,9 +120,21 @@ public class GameGUI {
         gameFrame = new GameFrame(gamePanel, sidePanel);
         sidePanel.setGameFrame(gameFrame.getGameFrame());
         Scanner sc = new Scanner(System.in);
-        //while(!game.isOver()){
+        while(!game.isOver()){
+            if(game.getTable().getPlayingPlayer().isBot()){
+                game.playRoundAI(game.getTable().getPlayingPlayer());
+                game.getTable().nextPlayer();
+            }else {
+                sc.nextInt();
+                game.getTable().nextPlayer();
+            }
 
-       // }
+            game.getTable().setGroundCard(game.getTable().getDrawDeck().getFirstCard());
+
+            disableNonPlayingPlayers();
+
+            updateDeckContainer();
+        }
     }
 
 
@@ -328,6 +340,14 @@ public class GameGUI {
                 }
             }
         }
+    }
+
+    /***********************************************
+     * GAME FUNCTIONS
+     * *********************************************/
+
+    public void updateDeckContainer(){
+        this.deckContainer.setGroundCard(game.getTable().getGroundCard());
     }
 
     public static void main(String[] args) {

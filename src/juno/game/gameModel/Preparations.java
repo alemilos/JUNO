@@ -59,8 +59,6 @@ public class Preparations {
                 cardProblemIsFixed = true;
             }
         }
-        // TEST
-        this.table.setGroundCard(new WildCard(CardTypes.WILD));
 
         /**Special initial cases**/
         switch (this.table.getGroundCard().getType()){

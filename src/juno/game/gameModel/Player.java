@@ -20,6 +20,21 @@ public class Player {
         this.isBot = isBot;
     }
 
+    public void setPreparationsRandomCardValue(Card preparationsRandomCard) {
+        /**For preparation phase**/
+        if (preparationsRandomCard.getClass() != ClassicCard.class){
+            this.preparationsRandomCardValue = 0;
+        }
+        else{
+            ClassicCard downCastClassicCard = (ClassicCard)preparationsRandomCard;
+            this.preparationsRandomCardValue = downCastClassicCard.getNumber();
+        }
+    }
+
+    public void drawCard(Card card){
+        this.hand.add(card);
+    }
+
     public String getName(){
         return name;
     }
@@ -42,16 +57,6 @@ public class Player {
 
     public int getPreparationsRandomCardValue() {
         return preparationsRandomCardValue;
-    }
-
-    public void setPreparationsRandomCardValue(Card preparationsRandomCard) {
-        if (preparationsRandomCard.getClass() != ClassicCard.class){
-            this.preparationsRandomCardValue = 0;
-        }
-        else{
-            ClassicCard downCastClassicCard = (ClassicCard)preparationsRandomCard;
-            this.preparationsRandomCardValue = downCastClassicCard.getNumber();
-        }
     }
 
     public String toString(){

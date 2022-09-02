@@ -2,8 +2,8 @@ package juno.game.gameModel;
 
 public abstract class SpecialCard extends Card{
 
-    private CardColors color;
-    private boolean isActive;
+    protected CardColors color;
+    protected boolean isActive;
 
     public SpecialCard(CardTypes type){
         super(type);

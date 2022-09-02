@@ -2,6 +2,7 @@ package juno.game.gameModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Preparations {
@@ -58,24 +59,31 @@ public class Preparations {
                 cardProblemIsFixed = true;
             }
         }
+        // TEST
+        this.table.setGroundCard(new WildCard(CardTypes.WILD));
 
         /**Special initial cases**/
-        switch (getTable().getGroundCard().getType()){
+        switch (this.table.getGroundCard().getType()){
             case SKIP -> {
-                System.out.println("SKIP CARD");
-                System.out.println("BeforeSkip: " + getTable().getPlayingPlayer());
-                getTable().nextPlayer();
-                System.out.println("AfterSKIP: " + getTable().getPlayingPlayer());
-            }
-            case CLASSIC -> {
-                System.out.println("classic card");
+                table.nextPlayer();
             }
             case REVERSE -> {
-                System.out.println("reverse card");
-                getTable().setReverseFlow();
+                this.table.setReverseFlow();
+                this.table.nextPlayer();
             }
             case DRAW_TWO -> {
-                System.out.println("draw_two card");
+                this.table.getPlayingPlayer().drawCard(table.getDrawDeck().getFirstCard());
+                this.table.getPlayingPlayer().drawCard(table.getDrawDeck().getFirstCard());
+            }
+            case WILD -> {
+                if(table.getPlayingPlayer().isBot()){
+                    Random rand = new Random();
+                    int colorIndex = rand.nextInt(4);
+                    ((WildCard)table.getGroundCard()).setColor(CardColors.values()[colorIndex]);
+                    System.out.println("color: " + table.getGroundCard().getColor());
+                }
+                /**If the userPlayer is in this situation, considering that color of wildcard
+                 * is NULL, he can place whatever he wants **/
             }
         }
 

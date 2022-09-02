@@ -78,7 +78,6 @@ public class GameGUI {
          *
          * **/
 
-        System.out.println("players1: " + game.getTable().getPlayers());
         // Players in the order of play (with userPlayer included)
         ArrayList<Player> playersWithUser = game.getTable().getPlayers();
         /*
@@ -89,15 +88,9 @@ public class GameGUI {
 
         ArrayList<String> avatarsPathWithUser = changePositionOfAvatarsPath(avatarsPath, players, playersWithUser);
 
-        System.out.println("players2: " + game.getTable().getPlayers());
-
         ArrayList<Player> enemyPlayers = getPlayersWithoutUser(playersWithUser, userPlayer);
 
-        System.out.println("players3: " + game.getTable().getPlayers());
-
         ArrayList<String> enemyAvatarPaths = getPlayersWithoutUser(avatarsPathWithUser, user.getAvatar().getAvatarPath());
-
-        System.out.println("players4: " + game.getTable().getPlayers());
 
         /**Setting panels**/
         userPanel = new UserPanel(user, userPlayer);
@@ -120,20 +113,15 @@ public class GameGUI {
             rightEnemyPanel = new RightEnemyPanel(cardBackPath, nextToRightUser, nextToRightUserAvatarPath);
             gamePanel = new GamePanel(userPanel, multipleEnemiesTopGUI, leftEnemyPanel, rightEnemyPanel, deckContainer.getContainerPanel());
         }
-        System.out.println("players5: " + game.getTable().getPlayers());
         /**todo run this each turn**/
         disableNonPlayingPlayers();
-
-        System.out.println("players6: " + game.getTable().getPlayers());
-
 
         sidePanel = new SidePanel(user);
         gameFrame = new GameFrame(gamePanel, sidePanel);
         sidePanel.setGameFrame(gameFrame.getGameFrame());
         Scanner sc = new Scanner(System.in);
         //while(!game.isOver()){
-            game.getTable().nextPlayer();
-            disableNonPlayingPlayers();
+
        // }
     }
 

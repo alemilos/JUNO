@@ -126,6 +126,7 @@ public class GameGUI {
 
         System.out.println("players6: " + game.getTable().getPlayers());
 
+
         sidePanel = new SidePanel(user);
         gameFrame = new GameFrame(gamePanel, sidePanel);
         sidePanel.setGameFrame(gameFrame.getGameFrame());
@@ -134,7 +135,6 @@ public class GameGUI {
             game.getTable().nextPlayer();
             disableNonPlayingPlayers();
        // }
-
     }
 
 
@@ -238,8 +238,11 @@ public class GameGUI {
         * All the others (in case there are others) will be displayed in a reverse FlowLayout in the fourToNineEnemies class
         * */
         if (playersWithUser.get(0) == userPlayer){
-            playersWithUser.remove(0);
-            return playersWithUser;
+            P user  = playersWithUser.remove(0);
+            ArrayList<P> playersWithoutUser = new ArrayList<>();
+            playersWithoutUser.addAll(playersWithUser);
+            playersWithUser.add(0,user);
+            return playersWithoutUser;
         }
         else{
             int i = 0;

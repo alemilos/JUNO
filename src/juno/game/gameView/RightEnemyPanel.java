@@ -24,6 +24,9 @@ public class RightEnemyPanel extends JPanel {
     private JLabel rightAvatarLabel;
     private JPanel rightNamePanel;
 
+    private Player enemy;
+
+    /**Todo delete*/
     public RightEnemyPanel(){
         // in case we have 2 players...
         rightCardsLayeredPane = new JLayeredPane();
@@ -39,6 +42,7 @@ public class RightEnemyPanel extends JPanel {
      * The player at User's right goes in the top, while the enemy at User's left goes in the left
      * **/
     public RightEnemyPanel(String cardBackPath, Player enemy, String enemyAvatarPath){
+        this.enemy = enemy;
 
         /**
          * THIS will call the layred card constructor to build the layered cards
@@ -113,5 +117,9 @@ public class RightEnemyPanel extends JPanel {
 
     public void setRightAvatarLabel(boolean enabled){
         this.rightAvatarLabel.setEnabled(enabled);
+    }
+
+    public Player getEnemy(){
+        return enemy;
     }
 }

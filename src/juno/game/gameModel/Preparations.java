@@ -17,6 +17,7 @@ public class Preparations {
             Card randomCard = this.table.getDrawDeck().getRandomCard();
             player.setPreparationsRandomCardValue(randomCard);
         }
+
         // sort players based on: randomCardValue (big to small)
         ArrayList<Player> players = table.getPlayers().stream()
                                     .sorted(Comparator.comparing(Player::getPreparationsRandomCardValue).reversed())
@@ -41,6 +42,7 @@ public class Preparations {
 
         // set the ground card as the first card from the deck
         this.table.setGroundCard(this.table.getDrawDeck().getFirstCard());
+
         // check if the ground card is WildDrawFour
         boolean cardProblemIsFixed = false;
         // while the groundCard equals a WildDrawFourCard...
@@ -54,6 +56,26 @@ public class Preparations {
             }else{
                 // If NO... end cycle
                 cardProblemIsFixed = true;
+            }
+        }
+
+        /**Special initial cases**/
+        switch (getTable().getGroundCard().getType()){
+            case SKIP -> {
+                System.out.println("SKIP CARD");
+                System.out.println("BeforeSkip: " + getTable().getPlayingPlayer());
+                getTable().nextPlayer();
+                System.out.println("AfterSKIP: " + getTable().getPlayingPlayer());
+            }
+            case CLASSIC -> {
+                System.out.println("classic card");
+            }
+            case REVERSE -> {
+                System.out.println("reverse card");
+                getTable().setReverseFlow();
+            }
+            case DRAW_TWO -> {
+                System.out.println("draw_two card");
             }
         }
 

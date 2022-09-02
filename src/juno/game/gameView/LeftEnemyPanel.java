@@ -26,6 +26,9 @@ public class LeftEnemyPanel extends JPanel {
 
     private int componentHeight = 260;
 
+    private Player enemy;
+
+    /**Todo delete*/
     public LeftEnemyPanel(){
         // in case we have 2 players...
         leftCardsLayeredPane = new JLayeredPane();
@@ -41,7 +44,7 @@ public class LeftEnemyPanel extends JPanel {
      * The player at User's right goes in the top, while the enemy at User's left goes in the left
      * **/
     public LeftEnemyPanel(String cardBackPath, Player enemy, String enemyAvatarPath){
-
+        this.enemy = enemy;
         /**
          * THIS will call the layred card constructor to build the layered cards
         **/
@@ -112,7 +115,15 @@ public class LeftEnemyPanel extends JPanel {
         return leftCardsLayeredPane;
     }
 
+    public void setLeftAvatarLabel(boolean enabled){
+        this.leftAvatarLabel.setEnabled(enabled);
+    }
+
     public JPanel getPanelForLayPane(){
         return panelForLayPane;
+    }
+
+    public Player getEnemy(){
+        return enemy;
     }
 }

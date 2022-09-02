@@ -183,8 +183,8 @@ public class UserPanel extends JPanel {
         return avatarLabel;
     }
 
-    public void setAvatarLabel(JLabel avatarLabel) {
-        this.avatarLabel = avatarLabel;
+    public void setAvatarLabel(boolean enabled) {
+        this.avatarLabel.setEnabled(enabled);
     }
 
     public JPanel getNamePanel() {

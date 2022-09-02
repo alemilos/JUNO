@@ -306,6 +306,7 @@ public class GameSettingsGUI extends JFrame implements ActionListener{
     }
 
     public void closeFrame(){
+        System.out.println("disposing gamesettingsgui frame");
         this.frame.dispose();
     }
 

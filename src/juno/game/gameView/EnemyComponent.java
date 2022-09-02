@@ -25,8 +25,12 @@ public class EnemyComponent extends JPanel {
     private JPanel layPanePanel;
     private JLayeredPane cardsPane;
 
+    private Player enemy;
+
 
     public EnemyComponent(int componentWidth, Player enemy, String avatarPath, String cardBackPath){
+        this.enemy = enemy;
+
 
         containerPanel = new JPanel(new BorderLayout());
         containerPanel.setSize(componentWidth,280);
@@ -105,5 +109,7 @@ public class EnemyComponent extends JPanel {
         avatarLabel.setEnabled(enabled);
     }
 
-
+    public Player getEnemy(){
+        return enemy;
+    }
 }

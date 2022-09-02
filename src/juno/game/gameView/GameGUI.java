@@ -50,7 +50,7 @@ public class GameGUI {
 
     private GamePanel gamePanel;
 
-    private JPanel deckContainer;
+    private DeckAndGroundCardPanel deckContainer;
 
     public GameGUI(User user, int playersNumber, Difficulty difficulty, String cardBackPath){
         this.user = user;
@@ -78,6 +78,7 @@ public class GameGUI {
          *
          * **/
 
+        System.out.println("players1: " + game.getTable().getPlayers());
         // Players in the order of play (with userPlayer included)
         ArrayList<Player> playersWithUser = game.getTable().getPlayers();
         /*
@@ -88,60 +89,116 @@ public class GameGUI {
 
         ArrayList<String> avatarsPathWithUser = changePositionOfAvatarsPath(avatarsPath, players, playersWithUser);
 
-        ArrayList<Player> enemyPlayers     = getPlayersWithoutUser(playersWithUser, userPlayer);
+        System.out.println("players2: " + game.getTable().getPlayers());
+
+        ArrayList<Player> enemyPlayers = getPlayersWithoutUser(playersWithUser, userPlayer);
+
+        System.out.println("players3: " + game.getTable().getPlayers());
 
         ArrayList<String> enemyAvatarPaths = getPlayersWithoutUser(avatarsPathWithUser, user.getAvatar().getAvatarPath());
 
-        /**ENEMY GUI WILL BE FOR 2, 3 and 4 players since we will have 1 enemy at the top
-         *
-         * All of this code will go in the constructors of GamePanel
-         * **/
+        System.out.println("players4: " + game.getTable().getPlayers());
 
+        /**Setting panels**/
         userPanel = new UserPanel(user, userPlayer);
         Player nextToLeftUser = enemyPlayers.get(enemyPlayers.size()-1);
         Player nextToRightUser = enemyPlayers.get(0);
         String nextToRightUserAvatarPath = enemyAvatarPaths.get(0);
         String nextToLeftUserAvatarPath = enemyAvatarPaths.get(enemyPlayers.size()-1);
-        deckContainer = getCenterDDeckAndGCard(cardBackPath, game.getTable().getGroundCard());
-
+        deckContainer = new DeckAndGroundCardPanel(cardBackPath, game.getTable().getGroundCard());
 
         if(playersNumber == 2){
             enemyGUI = new OneEnemyGUI(cardBackPath, nextToRightUser, nextToRightUserAvatarPath, playersNumber);
-            gamePanel = new GamePanel(userPanel, enemyGUI, deckContainer);
+            gamePanel = new GamePanel(userPanel, enemyGUI, deckContainer.getContainerPanel());
         }
         else if(playersNumber == 3){
-            System.out.println(enemyPlayers);
             multipleEnemiesTopGUI = new MultipleEnemiesTopGUI(cardBackPath,enemyPlayers,enemyAvatarPaths);
-            gamePanel = new GamePanel(userPanel, multipleEnemiesTopGUI, deckContainer);
+            gamePanel = new GamePanel(userPanel, multipleEnemiesTopGUI, deckContainer.getContainerPanel());
         }else if (playersNumber > 3) {
             multipleEnemiesTopGUI = new MultipleEnemiesTopGUI(cardBackPath, getTopEnemiesArray(enemyPlayers), getTopEnemiesArray(enemyAvatarPaths));
             leftEnemyPanel = new LeftEnemyPanel(cardBackPath, nextToLeftUser, nextToLeftUserAvatarPath);
             rightEnemyPanel = new RightEnemyPanel(cardBackPath, nextToRightUser, nextToRightUserAvatarPath);
-            gamePanel = new GamePanel(userPanel, multipleEnemiesTopGUI, leftEnemyPanel, rightEnemyPanel, deckContainer);
+            gamePanel = new GamePanel(userPanel, multipleEnemiesTopGUI, leftEnemyPanel, rightEnemyPanel, deckContainer.getContainerPanel());
         }
+        System.out.println("players5: " + game.getTable().getPlayers());
+        /**todo run this each turn**/
+        disableNonPlayingPlayers();
 
-        /**TODO disable players avatar labels if player != table.getPlayingPlayer()**/
-        //disableNonPlayingPlayers();
+        System.out.println("players6: " + game.getTable().getPlayers());
 
         sidePanel = new SidePanel(user);
         gameFrame = new GameFrame(gamePanel, sidePanel);
         sidePanel.setGameFrame(gameFrame.getGameFrame());
+        Scanner sc = new Scanner(System.in);
+        //while(!game.isOver()){
+            game.getTable().nextPlayer();
+            disableNonPlayingPlayers();
+       // }
+
     }
 
-    /*
+
     public void disableNonPlayingPlayers(){
         if (this.playersNumber == 2){
-            Player playingPlayer = game.getTable().getPlayingPlayer();
-            enemyGUI.setAvatarLabel(playingPlayer == enemyGUI.getEnemy() );
-            userAvatarLabel.setEnabled(playingPlayer == userPlayer);
+            if(game.getTable().getPlayingPlayer() == userPlayer){
+                userPanel.setAvatarLabel(true);
+                enemyGUI.setAvatarLabel(false);
+            }else{
+                enemyGUI.setAvatarLabel(true);
+                userPanel.setAvatarLabel(false);
+            }
         }else if(this.playersNumber == 3){
+            Player playingPlayer = game.getTable().getPlayingPlayer();
+            if(playingPlayer == userPlayer){
+                userPanel.setAvatarLabel(true);
 
-        }else if(this.playersNumber == 4){
+            }else{
+                userPanel.setAvatarLabel(false);
+            }
+            for (EnemyComponent enemyComponent: multipleEnemiesTopGUI.getEnemiesComponentsList()){
+                if(playingPlayer == enemyComponent.getEnemy()){
+                    enemyComponent.setAvatarLabel(true);
+                }else{
+                    enemyComponent.setAvatarLabel(false);
+                }
+            }
+        }else if(this.playersNumber >= 4){
+            Player playingPlayer = game.getTable().getPlayingPlayer();
+            if(playingPlayer == userPlayer){
+                userPanel.setAvatarLabel(true);
+                leftEnemyPanel.setLeftAvatarLabel(false);
+                rightEnemyPanel.setRightAvatarLabel(false);
+                for(EnemyComponent enemyComponent : multipleEnemiesTopGUI.getEnemiesComponentsList()){
+                    enemyComponent.setAvatarLabel(false);
+                }
 
+            }else{
+                userPanel.setAvatarLabel(false);
+                if (playingPlayer == leftEnemyPanel.getEnemy()){
+                    leftEnemyPanel.setLeftAvatarLabel(true);
+                    rightEnemyPanel.setRightAvatarLabel(false);
+                }
+                /**Evaluating right GUI**/
+                else if (playingPlayer == rightEnemyPanel.getEnemy()){
+                    rightEnemyPanel.setRightAvatarLabel(true);
+                    leftEnemyPanel.setLeftAvatarLabel(false);
+                }
+                else if(playingPlayer != rightEnemyPanel.getEnemy() && playingPlayer != leftEnemyPanel.getEnemy()){
+                    rightEnemyPanel.setRightAvatarLabel(false);
+                    leftEnemyPanel.setLeftAvatarLabel(false);
+                }
+                for(EnemyComponent enemyComponent: multipleEnemiesTopGUI.getEnemiesComponentsList()){
+                    /**Evaluating TOP GUI**/
+                    if(enemyComponent.getEnemy() == game.getTable().getPlayingPlayer()){
+                        enemyComponent.setAvatarLabel(true);
+                    }
+                    else{
+                        enemyComponent.setAvatarLabel(false);
+                    }
+                }
+            }
         }
     }
-
-     */
 
     public <T> ArrayList<T> getTopEnemiesArray(ArrayList<T> array){
         // remove first and last element of the array which represent the left and right players
@@ -234,58 +291,6 @@ public class GameGUI {
         frame.setVisible(true);
         return frame;
     }
-
-
-
-    public JPanel getCenterDDeckAndGCard(String backCardPath, Card groundCard){
-
-        JPanel containerPanel = new JPanel(new BorderLayout());
-
-        JPanel drawBtnPanel = new JPanel(new GridBagLayout());
-        drawBtnPanel.setPreferredSize(new Dimension(300,80));
-
-        JButton drawBtn = new JButton("PESCA");
-        drawBtn.setFont(new Font("Sans Serif", Font.BOLD, 20));
-        drawBtn.setForeground(Color.white);
-        drawBtn.setPreferredSize(new Dimension(280,50));
-        drawBtn.setOpaque(true);
-        drawBtn.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-        drawBtn.setBackground(Color.red);
-
-        drawBtnPanel.add(drawBtn);
-
-        JPanel deckAndGroundCardContainerPanel = new JPanel(new GridBagLayout());
-        deckAndGroundCardContainerPanel.setSize(new Dimension(300, 160));
-
-        JPanel deckAndGroundCardPanel = new JPanel(new FlowLayout());
-        deckAndGroundCardPanel.setSize(new Dimension(300, 160));
-
-        ImageIcon backCardIcon = new ImageIcon(backCardPath);
-        Image backCardImage = backCardIcon.getImage();
-        Image newBackCardImage = backCardImage.getScaledInstance(75,120, Image.SCALE_SMOOTH);
-        backCardIcon = new ImageIcon(newBackCardImage);
-        JLabel backCardLabel = new JLabel();
-        backCardLabel.setIcon(backCardIcon);
-
-        ImageIcon groundCardIcon = new ImageIcon(groundCard.getImagePath());
-        Image groundCardImage = groundCardIcon.getImage();
-        Image newGroundCardImage = groundCardImage.getScaledInstance(75,120, Image.SCALE_SMOOTH);
-        groundCardIcon = new ImageIcon(newGroundCardImage);
-        JLabel groundCardLabel = new JLabel();
-        groundCardLabel.setIcon(groundCardIcon);
-
-        deckAndGroundCardPanel.add(backCardLabel);
-        deckAndGroundCardPanel.add(Box.createHorizontalStrut(20));
-        deckAndGroundCardPanel.add(groundCardLabel);
-
-        deckAndGroundCardContainerPanel.add(deckAndGroundCardPanel);
-
-        containerPanel.add(drawBtnPanel, BorderLayout.NORTH);
-        containerPanel.add(deckAndGroundCardContainerPanel, BorderLayout.CENTER);
-
-        return containerPanel;
-    }
-
 
     public ArrayList<JPanel> getPlayerAvatarAndNameDisplay(Player player){
         // returns an avatar image in the top and a name in the bottom

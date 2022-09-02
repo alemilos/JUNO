@@ -21,6 +21,8 @@ public class MultipleEnemiesTopGUI {
 
     private EnemyComponent enemyComponent;
 
+    private ArrayList<EnemyComponent> enemiesComponentsList = new ArrayList<>();
+
     public MultipleEnemiesTopGUI(){
         // this sets everything to default
     }
@@ -41,6 +43,8 @@ public class MultipleEnemiesTopGUI {
             enemyComponent =
                     new EnemyComponent(enemyComponentWidth, enemies.get(i), avatarPaths.get(i), cardBackPath);
 
+            enemiesComponentsList.add(enemyComponent);
+
             enemyComponentsContainerPanel.add(enemyComponent.getContainerPanel());
 
         }
@@ -55,5 +59,9 @@ public class MultipleEnemiesTopGUI {
 
     public EnemyComponent getEnemyComponent(){
         return enemyComponent;
+    }
+
+    public ArrayList<EnemyComponent> getEnemiesComponentsList(){
+        return enemiesComponentsList;
     }
 }
